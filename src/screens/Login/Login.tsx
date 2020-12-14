@@ -6,6 +6,7 @@ import { PreferencesContext } from '../../../Theming';
 import { TextField } from '../../components/TextField';
 import { Button } from '../../components/Button';
 import { loginWithEmailAndPassword } from './LoginFunctions';
+import { Header } from '../../components/Header';
 
 function Login(){
 
@@ -37,7 +38,7 @@ function Login(){
   
   return (
     <SafeAreaView style={styles.window}>
-      <IconButton icon="close" color={colors.text} size={24} onPress={closeWindow} />
+      <Header left={<IconButton icon="close" color={colors.text} size={24} onPress={closeWindow} />} />
       <Text style={styles.title}>Login to your account.</Text>
       <View style={styles.textFieldsView}>
         <TextField inputType="email-address" placeholder="Email" value={email} />

@@ -6,8 +6,8 @@ const LightAppTheme : Theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: "#F18F01",
-    accent: "#EE6352",
+    primary: "#ff8e71",
+    accent: "#ffba93",
     surface: "#FFFFFF"
   }
 } 
@@ -16,9 +16,11 @@ const DarkAppTheme : Theme = {
   ...DarkTheme,
   colors: {
     ...DarkTheme.colors,
-    primary: "#F18F01",
-    accent: "#EE6352",
-    surface: "#181818"
+    primary: "#ff8e71",
+    accent: "#ffba93",
+    surface: "#3b264f",
+    background: "#352247",
+
   }
 }
 

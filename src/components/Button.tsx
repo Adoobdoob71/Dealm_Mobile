@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, ViewProps } from 'react-native';
+import { Platform, StyleSheet, Text, View, ViewProps, TouchableNativeFeedback } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ActivityIndicator, useTheme } from 'react-native-paper';
+import { ActivityIndicator, TouchableRipple, useTheme } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 interface ButtonProps extends ViewProps {
@@ -39,14 +39,23 @@ function Button(props : ButtonProps){
     }
   })
   return (
-      <TouchableOpacity style={[styles.button, props.style]} onPress={props.onPress} disabled={props.loading || props.disabled}>
-        {props.loading ? (
-          <ActivityIndicator size={16} color={props.mode === "full" ? (props.disabled || props.loading ? colors.disabled : "#FFFFFF") : props.disabled || props.loading ? colors.disabled : colors.primary} style={styles.left}/>
-        ) : props.icon && 
-          <MaterialCommunityIcons name={props.icon} size={18} color={props.mode === "full" ? (props.disabled || props.loading ? colors.disabled : "#FFFFFF") : props.disabled || props.loading ? colors.disabled : colors.primary} style={styles.left} />
-        }
-        <Text style={styles.text}>{props.text}</Text>
-     </TouchableOpacity>
+    <View style={[{ borderRadius: 6, overflow: "hidden", elevation: props.mode === "full" ? 1 : 0 }, props.style]}>
+      <TouchableRipple 
+        onPress={props.onPress} 
+        disabled={props.loading || props.disabled}
+        rippleColor={Platform.OS === "web" ? "#ff8e7175" : undefined} 
+        background={Platform.OS === "android" ? TouchableNativeFeedback.Ripple(colors.primary, true) : undefined}
+      >
+        <View style={styles.button}>
+          {props.loading ? (
+            <ActivityIndicator size={16} color={props.mode === "full" ? (props.disabled || props.loading ? colors.disabled : "#FFFFFF") : props.disabled || props.loading ? colors.disabled : colors.primary} style={styles.left}/>
+          ) : props.icon && 
+            <MaterialCommunityIcons name={props.icon} size={18} color={props.mode === "full" ? (props.disabled || props.loading ? colors.disabled : "#FFFFFF") : props.disabled || props.loading ? colors.disabled : colors.primary} style={styles.left} />
+          }
+          <Text style={styles.text}>{props.text}</Text>
+        </View>
+     </TouchableRipple>
+    </View>
   )
 }
 

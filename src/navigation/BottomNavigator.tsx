@@ -6,6 +6,7 @@ import { Home } from '../screens/Home/Home';
 import { Contacts } from '../screens/Contacts/Contacts';
 import { Profile } from '../screens/Profile/Profile';
 import { useTheme } from 'react-native-paper';
+import { PreferencesContext } from '../../Theming';
 
 // const tabs: TabsConfig<BubbleTabBarItemConfig> = {
 //   Home: {
@@ -56,9 +57,12 @@ const Tab = createMaterialBottomTabNavigator();
 
 export default function BottomNavigator() {
   const { colors } = useTheme();
+  const { isThemeDark } = React.useContext(PreferencesContext);
+  const activeColor = isThemeDark ? colors.primary : colors.text;
   return (
     <Tab.Navigator
       barStyle={{ backgroundColor: colors.surface }}
+      activeColor={activeColor}
       inactiveColor={colors.disabled}
       initialRouteName="Home"
       // tabBar={(props: any) => (
@@ -70,7 +74,7 @@ export default function BottomNavigator() {
         component={Home}
         options={{ 
           tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons name={focused ? "home" : "home-outline"} color={focused ? colors.text : colors.disabled} size={21}/>
+            <MaterialCommunityIcons name={focused ? "home-variant" : "home-variant-outline"} color={focused ? activeColor : colors.disabled} size={21}/>
           ),
           tabBarColor: colors.primary
         }}
@@ -80,7 +84,7 @@ export default function BottomNavigator() {
         component={Contacts}
         options={{
           tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons name={focused ? "account-multiple" : "account-multiple-outline"} color={focused ? colors.text : colors.disabled} size={21} />
+            <MaterialCommunityIcons name={focused ? "account-multiple" : "account-multiple-outline"} color={focused ? activeColor : colors.disabled} size={21} />
           )
         }}
       />
@@ -90,7 +94,7 @@ export default function BottomNavigator() {
         component={Profile}
         options={{
           tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons name={focused ? "account" : "account-outline"} color={focused ? colors.text : colors.disabled} size={21} />
+            <MaterialCommunityIcons name={focused ? "account" : "account-outline"} color={focused ? activeColor : colors.disabled} size={21} />
           )
         }}
       />

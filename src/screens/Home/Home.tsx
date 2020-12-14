@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import { Alert, SafeAreaView, Text, View } from 'react-native';
 import { PreferencesContext } from '../../../Theming';
 import { Button } from '../../components/Button';
+import { Header } from '../../components/Header';
 
 
 function Home(){
@@ -11,9 +12,11 @@ function Home(){
   const openLoginWindow = () => navigation.navigate("Login");
   const openSettingsWindow = () => navigation.navigate("Settings");
   return (
-    <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Button mode="full" text="Login" onPress={openLoginWindow} icon="chevron-right"/>
-      <Button mode="bordered" text="Settings" onPress={openSettingsWindow} icon="cog" style={{ marginTop: 12 }}/>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Header title="Home" />
+      <Button mode="full" text="Settings" onPress={openSettingsWindow} style={{ alignSelf: "center", marginTop: 48 }}/>
+      <Button mode="bordered" text="Login" onPress={openLoginWindow} style={{ alignSelf: "center", marginTop: 32 }}/>
+      <Button mode="text" text="Button" onPress={() => Alert.alert("click")} style={{ alignSelf: "center", marginTop: 32 }}/>
     </SafeAreaView>
   )
 }
