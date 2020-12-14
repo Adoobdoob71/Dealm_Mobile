@@ -11,6 +11,7 @@ interface HeaderProps {
   onPress?: () => void;
   subTitle?: string;
   center?: () => JSX.Element;
+  transparent?: boolean;
 }
 
 function Header(props : HeaderProps){
@@ -22,7 +23,7 @@ function Header(props : HeaderProps){
       alignItems: "center",
       paddingHorizontal: 8,
       height: 56,
-      backgroundColor: colors.surface,
+      backgroundColor: props.transparent ? "transparent" : colors.surface,
     },
     headerCenterView: {
       flex: 1

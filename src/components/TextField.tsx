@@ -8,7 +8,6 @@ interface TextFieldProps {
   showButton?: boolean,
   secureText?: boolean,
   placeholder: string,
-  value: string | number;
 }
 
 function TextField({ inputType, clearButton, showButton, secureText, placeholder } : TextFieldProps){

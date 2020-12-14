@@ -20,7 +20,7 @@ function Button(props : ButtonProps){
     button: {
       backgroundColor: props.disabled || props.loading ? (props.mode === "full" ? colors.disabled : "transparent") : props.mode === "full" ? colors.primary : "transparent",
       borderRadius: 6,
-      borderWidth: props.mode === "bordered" ? 1 : 0,
+      borderWidth: props.mode === "bordered" ? 1 : undefined,
       borderColor: props.mode === "bordered" ? (props.disabled || props.loading ? colors.disabled : colors.primary) : undefined,
       flexDirection: "row",
       paddingHorizontal: 12,
