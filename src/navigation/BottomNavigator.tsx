@@ -1,12 +1,15 @@
-import * as React from 'react';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import AnimatedTabBar, {TabsConfig, BubbleTabBarItemConfig} from '@gorhom/animated-tabbar';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Home } from '../screens/Home/Home';
-import { Contacts } from '../screens/Contacts/Contacts';
-import { Profile } from '../screens/Profile/Profile';
-import { useTheme } from 'react-native-paper';
-import { PreferencesContext } from '../../Theming';
+import * as React from "react";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import AnimatedTabBar, {
+  TabsConfig,
+  BubbleTabBarItemConfig,
+} from "@gorhom/animated-tabbar";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Home } from "../screens/Home";
+import { Contacts } from "../screens/Contacts";
+import { Profile } from "../screens/Profile";
+import { useTheme } from "react-native-paper";
+import { PreferencesContext } from "../../Theming";
 
 // const tabs: TabsConfig<BubbleTabBarItemConfig> = {
 //   Home: {
@@ -72,11 +75,15 @@ export default function BottomNavigator() {
       <Tab.Screen
         name="Home"
         component={Home}
-        options={{ 
+        options={{
           tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons name={focused ? "home-variant" : "home-variant-outline"} color={focused ? activeColor : colors.disabled} size={21}/>
+            <MaterialCommunityIcons
+              name={focused ? "home-variant" : "home-variant-outline"}
+              color={focused ? activeColor : colors.disabled}
+              size={21}
+            />
           ),
-          tabBarColor: colors.primary
+          tabBarColor: colors.primary,
         }}
       />
       <Tab.Screen
@@ -84,24 +91,30 @@ export default function BottomNavigator() {
         component={Contacts}
         options={{
           tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons name={focused ? "account-multiple" : "account-multiple-outline"} color={focused ? activeColor : colors.disabled} size={21} />
-          )
+            <MaterialCommunityIcons
+              name={focused ? "account-multiple" : "account-multiple-outline"}
+              color={focused ? activeColor : colors.disabled}
+              size={21}
+            />
+          ),
         }}
       />
-      
+
       <Tab.Screen
         name="Profile"
         component={Profile}
         options={{
           tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons name={focused ? "account" : "account-outline"} color={focused ? activeColor : colors.disabled} size={21} />
-          )
+            <MaterialCommunityIcons
+              name={focused ? "account" : "account-outline"}
+              color={focused ? activeColor : colors.disabled}
+              size={21}
+            />
+          ),
         }}
       />
     </Tab.Navigator>
-  )
+  );
 }
 
-export {
-  BottomNavigator
-}
+export { BottomNavigator };
