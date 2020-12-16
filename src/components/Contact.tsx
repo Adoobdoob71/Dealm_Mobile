@@ -72,11 +72,16 @@ function Contact(props: ContactProps) {
                 icon="chevron-down"
                 color={activeColor}
                 onPress={openMenu}
+                size={18}
+                style={{ alignSelf: "flex-start" }}
               />
             }
             onDismiss={dismissMenu}
             visible={menuOpen}
-            contentStyle={{ backgroundColor: colors.surface }}>
+            contentStyle={{
+              backgroundColor: colors.surface,
+              alignSelf: "flex-start",
+            }}>
             <Menu.Item
               title={`Follow ${props.nickname}`}
               disabled={!firebase.default.auth().currentUser}

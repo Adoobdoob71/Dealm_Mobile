@@ -10,6 +10,7 @@ function Home() {
   const navigation = useNavigation();
   const openLoginWindow = () => navigation.navigate("Login");
   const openSettingsWindow = () => navigation.navigate("Settings");
+  const openRegisterWindow = () => navigation.navigate("Register");
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Header title="Home" />
@@ -28,7 +29,7 @@ function Home() {
       <Button
         mode="text"
         text="Button"
-        onPress={() => Alert.alert("click")}
+        onPress={openRegisterWindow}
         style={{ alignSelf: "center", marginTop: 32 }}
       />
     </SafeAreaView>

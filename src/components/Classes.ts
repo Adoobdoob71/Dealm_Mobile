@@ -5,7 +5,7 @@ interface User {
   email: string;
   online: boolean;
   lastOnline: string;
-  private_messages: Map<String, PrivateRoom>;
+  private_messages?: Map<String, PrivateRoom>;
 }
 
 interface PrivateRoom {

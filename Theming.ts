@@ -9,7 +9,8 @@ const LightAppTheme : Theme = {
     primary: "#ff8e71",
     accent: "#ffba93",
     surface: "#FFFFFF",
-    backdrop: "#00000088"
+    backdrop: "#00000088",
+    placeholder: "#959595",
   }
 } 
 
@@ -21,7 +22,8 @@ const DarkAppTheme : Theme = {
     accent: "#ffba93",
     surface: "#3b264f",
     background: "#352247",
-    backdrop: "#00000088"
+    backdrop: "#00000088",
+    placeholder: "#959595",
   }
 }
 

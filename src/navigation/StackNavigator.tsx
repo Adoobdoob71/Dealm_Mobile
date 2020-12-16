@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Login } from "../screens/Login";
 import { BottomNavigator } from "./BottomNavigator";
 import { Settings } from "../screens/Settings";
+import { Register } from "../screens/Register";
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,11 @@ function StackNavigator() {
       <Stack.Screen
         name="Login"
         component={Login}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Register"
+        component={Register}
         options={{ headerShown: false }}
       />
       <Stack.Screen
