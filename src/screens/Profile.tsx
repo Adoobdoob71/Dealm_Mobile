@@ -1,6 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import * as React from "react";
-import { View, Text, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ImageBackground,
+  Dimensions,
+} from "react-native";
 import { IconButton, useTheme } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
 import { Header } from "../components/Header";
@@ -11,7 +17,7 @@ function Profile() {
   const { isThemeDark } = React.useContext(PreferencesContext);
   const { colors } = useTheme();
   const navigation = useNavigation();
-  const [nickname, setNickname] = React.useState<string>("");
+  const [user, setUser] = React.useState<User | null>(null);
 
   const activeColor = isThemeDark ? colors.primary : colors.text;
   React.useEffect(() => {
@@ -23,24 +29,18 @@ function Profile() {
           .doc(user.uid)
           .get();
         let userData: User = result.data() as User;
-        setNickname(userData.nickname);
-      } else setNickname("My Profile");
+        setUser(userData);
+      } else setUser(null);
     });
   }, []);
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Header
-        title="Profile"
-        subTitle={nickname}
-        left={
-          <IconButton
-            icon="account-outline"
-            color={activeColor}
-            size={24}
-            onPress={() => {}}
-          />
-        }
-      />
+      <ImageBackground
+        source={{ uri: user?.backgroundPicture }}
+        style={{
+          width: Dimensions.get("window").width,
+          height: 250,
+        }}></ImageBackground>
     </SafeAreaView>
   );
 }

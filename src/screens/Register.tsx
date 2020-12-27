@@ -146,6 +146,7 @@ function Register() {
             lastOnline: "",
             profilePicture: result,
             userUID: user?.uid,
+            backgroundPicture: "",
           };
           await db.doc(user?.uid).set(newUser);
           setMessage("Successfully registered! 🎉");

@@ -6,6 +6,7 @@ interface User {
   online: boolean;
   lastOnline: string;
   private_messages?: Map<String, PrivateRoom>;
+  backgroundPicture: string;
 }
 
 interface PrivateRoom {
