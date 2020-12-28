@@ -24,6 +24,7 @@ interface ButtonProps extends ViewProps {
   color?: string;
   onPress: () => void;
   iconButton?: boolean;
+  fontSize?: number;
 }
 
 function Button(props: ButtonProps) {
@@ -63,7 +64,7 @@ function Button(props: ButtonProps) {
           : props.disabled || props.loading
           ? colors.disabled
           : colors.primary,
-      fontSize: 14,
+      fontSize: props.fontSize ? props.fontSize : 14,
       fontWeight: "bold",
       textTransform: "uppercase",
       opacity: props.disabled || props.loading ? 0.6 : 1,
@@ -108,7 +109,7 @@ function Button(props: ButtonProps) {
             props.icon && (
               <MaterialCommunityIcons
                 name={props.icon}
-                size={18}
+                size={props.fontSize ? props.fontSize + 4 : 18}
                 color={
                   props.mode === "full"
                     ? props.disabled || props.loading

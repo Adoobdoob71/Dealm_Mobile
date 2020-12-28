@@ -13,7 +13,7 @@ import { PreferencesContext } from "../../Theming";
 import * as firebase from "firebase";
 
 interface PostProps {
-  userUID: string;
+  userUID: string | undefined;
   title: string;
   body: string;
   imageUrl?: string;
@@ -38,9 +38,10 @@ function Post(props: PostProps) {
       alignItems: "center",
     },
     profilePicture: {
-      width: 42,
-      height: 42,
-      borderRadius: 21,
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      marginRight: 12,
     },
     userDetailsView: {
       flex: 1,
@@ -55,19 +56,26 @@ function Post(props: PostProps) {
       color: colors.placeholder,
     },
     middle: {
-      marginVertical: 10,
+      marginVertical: 8,
       padding: 6,
+    },
+    title: {
+      fontSize: 21,
+      color: colors.text,
+      marginBottom: 8,
+      fontWeight: "bold",
     },
     body: {
       fontSize: 14,
       color: colors.text,
       display: props.body.trim().length === 0 ? "none" : "flex",
-      marginBottom: 8,
+      marginBottom: props.imageUrl ? 8 : 0,
     },
     postImage: {
       height: screenHeight * 0.25,
       width: "70%",
       borderRadius: 8,
+      display: props.imageUrl ? "flex" : "none",
     },
   });
 
@@ -79,12 +87,12 @@ function Post(props: PostProps) {
   const timestamp = (): string => {
     let differenceInMins =
       (firebase.default.firestore.Timestamp.now().toMillis() -
-        (props.time.toMillis() % 60000)) /
-      1000;
+        props.time.toMillis()) /
+      60000;
     let smallerThan60 = differenceInMins < 60;
     let smallerThan1440 = differenceInMins < 1440;
 
-    if (smallerThan60) return differenceInMins + " mins ago";
+    if (smallerThan60) return differenceInMins.toFixed(0) + " mins ago";
 
     if (smallerThan1440)
       return (differenceInMins / 60).toFixed(0) + " hours ago";
@@ -93,24 +101,31 @@ function Post(props: PostProps) {
   };
 
   return (
-    <TouchableOpacity onPress={openPost}>
-      <View style={styles.mainView}>
-        <View style={styles.top}>
-          <Image source={{ uri: "" }} style={styles.profilePicture} />
-          <View style={styles.userDetailsView}>
-            <Text style={styles.nickname}>{props.nickname}</Text>
-            <Text style={styles.timestamp}>{timestamp}</Text>
-          </View>
-          <IconButton icon="send" size={16} color={activeColor} />
+    <View style={styles.mainView}>
+      <View style={styles.top}>
+        <Image
+          source={{ uri: props.profilePicture }}
+          style={styles.profilePicture}
+        />
+        <View style={styles.userDetailsView}>
+          <Text style={styles.nickname}>{props.nickname}</Text>
+          <Text style={styles.timestamp}>{timestamp()}</Text>
         </View>
-        <View style={styles.middle}>
-          <Text style={styles.body}>{props.body}</Text>
-          <TouchableOpacity onPress={openImage}>
-            <Image source={{ uri: props.imageUrl }} style={styles.postImage} />
-          </TouchableOpacity>
-        </View>
+        <IconButton
+          icon="send"
+          size={16}
+          color={activeColor}
+          onPress={() => {}}
+        />
       </View>
-    </TouchableOpacity>
+      <View style={styles.middle}>
+        <Text style={styles.title}>{props.title}</Text>
+        <Text style={styles.body}>{props.body}</Text>
+        <TouchableOpacity onPress={openImage}>
+          <Image source={{ uri: props.imageUrl }} style={styles.postImage} />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 

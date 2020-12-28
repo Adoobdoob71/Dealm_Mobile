@@ -4,6 +4,7 @@ import { Login } from "../screens/Login";
 import { BottomNavigator } from "./BottomNavigator";
 import { Settings } from "../screens/Settings";
 import { Register } from "../screens/Register";
+import { CreatePost } from "../screens/CreatePost";
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,11 @@ function StackNavigator() {
       <Stack.Screen
         name="Settings"
         component={Settings}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CreatePost"
+        component={CreatePost}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
