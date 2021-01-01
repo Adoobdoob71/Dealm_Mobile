@@ -11,16 +11,8 @@ import {
 import { IconButton, useTheme } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
 import * as firebase from "firebase";
+import { PostProps } from "./Classes";
 
-interface PostProps {
-  userUID: string | undefined;
-  title: string;
-  body: string;
-  imageUrl?: string;
-  nickname: string;
-  profilePicture: string;
-  time: firebase.default.firestore.Timestamp;
-}
 function Post(props: PostProps) {
   const { colors } = useTheme();
   const navigation = useNavigation();
@@ -72,8 +64,7 @@ function Post(props: PostProps) {
       marginBottom: props.imageUrl ? 8 : 0,
     },
     postImage: {
-      height: screenHeight * 0.25,
-      width: "70%",
+      height: screenHeight * 0.275,
       borderRadius: 8,
       display: props.imageUrl ? "flex" : "none",
     },
@@ -83,6 +74,8 @@ function Post(props: PostProps) {
     navigation.navigate("ImageScreen", { imageUrl: props.imageUrl });
 
   const openPost = () => navigation.navigate("PostScreen", { ...props });
+
+  const replyPrivately = () => navigation.navigate("ChatScreen", { ...props });
 
   const timestamp = (): string => {
     let differenceInMins =
@@ -115,7 +108,7 @@ function Post(props: PostProps) {
           icon="send"
           size={16}
           color={activeColor}
-          onPress={() => {}}
+          onPress={replyPrivately}
         />
       </View>
       <View style={styles.middle}>

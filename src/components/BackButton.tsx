@@ -30,7 +30,7 @@ function BackButton({ imageUrl }: BackButtonProps) {
       width: 32,
       height: 32,
       borderRadius: 16,
-      marginLeft: 8,
+      marginLeft: 6,
     },
     barrier: {
       borderRadius: 24,

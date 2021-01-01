@@ -1,25 +1,39 @@
 import * as React from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet, View } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import { useTheme } from "react-native-paper";
 import { BackButton } from "../components/BackButton";
 import { User } from "../components/Classes";
 import { Header } from "../components/Header";
+import { Message, MessageProps } from "../components/Message";
 import { UserStatus } from "../components/UserStatus";
 
 interface ChatProps {
-  userUID: string;
-  user: User;
+  userUID?: string;
+  user?: User;
+  replyToPost?: boolean;
 }
 
-function Chat({ user, userUID }: ChatProps) {
+function Chat({ route }: any) {
   const { colors } = useTheme();
+  const [messages, setMessages] = React.useState<MessageProps[]>([]);
+  const { profilePicture, nickname, userUID } = route.params;
   const styles = StyleSheet.create({});
+  React.useEffect(() => {}, []);
   return (
     <SafeAreaView>
       <Header
-        center={<UserStatus nickname="DotWiz" status={true} userUID="12" />}
-        left={<BackButton imageUrl={user.profilePicture} />}
+        center={
+          <UserStatus nickname={nickname} status={true} userUID={userUID} />
+        }
+        left={<BackButton imageUrl={profilePicture} />}
+      />
+      <FlatList
+        data={messages}
+        renderItem={({ item }) => <Message {...item} />}
       />
     </SafeAreaView>
   );
 }
+
+export { Chat, ChatProps };

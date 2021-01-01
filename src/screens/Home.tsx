@@ -35,38 +35,22 @@ function Home() {
       <Header
         title="Home"
         right={
-          <Button
-            mode="text"
-            text="Create post"
-            onPress={openCreatePostWindow}
-            fontSize={10}
-          />
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Button
+              mode="text"
+              text="Login"
+              onPress={openLoginWindow}
+              fontSize={10}
+            />
+            <Button
+              mode="text"
+              text="Create post"
+              onPress={openCreatePostWindow}
+              fontSize={10}
+            />
+          </View>
         }
       />
-      {/* <Button
-        mode="full"
-        text="Settings"
-        onPress={openSettingsWindow}
-        style={{ alignSelf: "center", marginTop: 48 }}
-      />
-      <Button
-        mode="bordered"
-        text="Login"
-        onPress={openLoginWindow}
-        style={{ alignSelf: "center", marginTop: 32 }}
-      />
-      <Button
-        mode="text"
-        text="Button"
-        onPress={openRegisterWindow}
-        style={{ alignSelf: "center", marginTop: 32 }}
-      />
-      <Button
-        mode="text"
-        text="Button"
-        onPress={openCreatePostWindow}
-        style={{ alignSelf: "center", marginTop: 32 }}
-      /> */}
       <FlatList
         data={posts}
         renderItem={({ item }) => <Post {...item.data()} />}

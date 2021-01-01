@@ -13,6 +13,7 @@ function UserStatus({ nickname, status, userUID }: UserStatusProps) {
   const styles = StyleSheet.create({
     body: {
       flex: 1,
+      marginHorizontal: 12,
     },
     nickname: {
       fontSize: 18,
@@ -23,12 +24,14 @@ function UserStatus({ nickname, status, userUID }: UserStatusProps) {
       alignItems: "center",
     },
     statusText: {
-      fontSize: 14,
+      fontSize: 12,
       color: colors.placeholder,
+      marginRight: 8,
     },
     badge: {
-      width: 10,
-      height: 10,
+      width: 6,
+      height: 6,
+      borderRadius: 3,
       display: status ? "flex" : "none",
       backgroundColor: status ? "#17ff3e" : "#6b6b6b",
     },
@@ -37,7 +40,7 @@ function UserStatus({ nickname, status, userUID }: UserStatusProps) {
     <View style={styles.body}>
       <Text style={styles.nickname}>{nickname}</Text>
       <View style={styles.status}>
-        <Text style={styles.statusText}>{status}</Text>
+        <Text style={styles.statusText}>{status ? "Online" : "Offline"}</Text>
         <View style={styles.badge}></View>
       </View>
     </View>

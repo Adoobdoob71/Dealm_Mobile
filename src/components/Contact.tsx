@@ -8,14 +8,7 @@ import {
 } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
 import * as firebase from "firebase";
-
-interface ContactProps {
-  profilePicture?: string;
-  nickname: string;
-  description: string;
-  userUID: string;
-  onPress?: () => void;
-}
+import { ContactProps } from "./Classes";
 
 function Contact(props: ContactProps) {
   const { colors } = useTheme();

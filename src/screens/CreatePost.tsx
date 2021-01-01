@@ -38,20 +38,23 @@ function CreatePost() {
       flex: 1,
     },
     title: {
-      fontSize: 18,
+      fontSize: 16,
       color: colors.text,
     },
     body: {
-      fontSize: 14,
-      marginTop: 24,
+      fontSize: 16,
+      marginTop: 16,
       flex: 1,
       color: colors.text,
       textAlignVertical: "top",
     },
     imagePreview: {
-      width: "75%",
-      height: screenHeight * 0.25,
+      width: "85%",
+      height: screenHeight * 0.35,
       display: imageBlob ? "flex" : "none",
+      alignSelf: "center",
+      borderRadius: 8,
+      marginBottom: 12,
     },
     headerButtonsView: {
       flexDirection: "row",
@@ -90,7 +93,7 @@ function CreatePost() {
     try {
       const user = firebase.default.auth().currentUser;
       let db = firebase.default.firestore().collection("users");
-      let data = await db.doc(user.uid).get();
+      let data = await db.doc(user?.uid).get();
       let userDetails: User = (data.data() as unknown) as User;
       const newPost: PostProps = {
         body: body,
@@ -100,14 +103,14 @@ function CreatePost() {
         time: firebase.default.firestore.Timestamp.now(),
         userUID: user?.uid,
       };
-      let result = await db.doc(user.uid).collection("posts").add(newPost);
+      let result = await db.doc(user?.uid).collection("posts").add(newPost);
       if (imageBlob) {
         let storageRef = firebase.default
           .storage()
-          .ref("images/users/posts" + result.id);
+          .ref("images/users/posts/" + result.id);
         await storageRef.put(imageBlob);
         let downloadUrl = await storageRef.getDownloadURL();
-        await db.doc(result.id).update({
+        await db.doc(user?.uid).collection("posts").doc(result.id).update({
           imageUrl: downloadUrl,
         });
       }
@@ -138,17 +141,25 @@ function CreatePost() {
           title="Create a post"
           right={
             <View style={styles.headerButtonsView}>
-              <Button
+              {/* <Button
                 mode="text"
                 fontSize={10}
                 text="Preview"
                 onPress={goToPreview}
+              /> */}
+              <IconButton
+                icon="image"
+                onPress={pickImage}
+                color={activeColor}
+                disabled={submitting}
+                size={18}
               />
               <IconButton
                 icon="plus"
                 onPress={submitPost}
                 color={activeColor}
                 disabled={submitting}
+                size={18}
               />
             </View>
           }
