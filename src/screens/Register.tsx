@@ -147,6 +147,7 @@ function Register() {
             profilePicture: result,
             userUID: user?.uid,
             backgroundPicture: "",
+            description: "Default Description",
           };
           await db.doc(user?.uid).set(newUser);
           setMessage("Successfully registered! 🎉");

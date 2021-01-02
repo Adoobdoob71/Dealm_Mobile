@@ -1,7 +1,7 @@
 import * as firebase from "firebase";
 
 interface User {
-  userUID: string;
+  userUID: string | undefined;
   profilePicture: string;
   nickname: string;
   email: string;
@@ -9,6 +9,7 @@ interface User {
   lastOnline: string;
   private_messages?: Map<String, PrivateRoom>;
   backgroundPicture: string;
+  description?: string;
 }
 
 interface PrivateRoom {
@@ -32,6 +33,7 @@ interface ContactProps {
   description: string;
   userUID: string;
   onPress?: () => void;
+  roomID: string;
 }
 
 interface ReplyProps {
@@ -51,11 +53,17 @@ interface MessageProps {
   replyData?: ReplyProps;
 }
 
+interface RoomProps {
+  userUID: string;
+  roomID: string;
+}
+
 export {
   User,
   PrivateRoom,
   PostProps,
   ContactProps,
   ReplyProps,
-  MessageProps
+  MessageProps,
+  RoomProps
 }

@@ -23,7 +23,7 @@ function Home() {
     let db = firebase.default
       .firestore()
       .collection("users")
-      .doc("QBYEeY3LJFZIVA5B2Obn7jdNQ8u2")
+      .doc("3qfdDWksBrcc7ofXfwRmbhJQDSw2")
       .collection("posts");
     db.get().then((snapshot) => {
       let arr = snapshot.docs as firebase.default.firestore.QueryDocumentSnapshot<PostProps>[];

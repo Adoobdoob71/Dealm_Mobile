@@ -17,7 +17,9 @@ function Search() {
   const { colors } = useTheme();
   const { isThemeDark } = React.useContext(PreferencesContext);
   const [searchQuery, setSearchQuery] = React.useState<string>("");
-  const [results, setResults] = React.useState<ContactProps[]>([]);
+  const [results, setResults] = React.useState<
+    firebase.default.firestore.QueryDocumentSnapshot<ContactProps>[]
+  >([]);
   const navigation = useNavigation();
   const styles = StyleSheet.create({
     body: {
@@ -26,16 +28,49 @@ function Search() {
     searchField: {
       flex: 1,
       borderRadius: 8,
-      backgroundColor: colors.backdrop,
+      backgroundColor: colors.background,
+      paddingHorizontal: 8,
+      paddingVertical: 6,
+      color: colors.text,
     },
   });
   const activeColor = isThemeDark ? colors.primary : colors.text;
 
   const goBack = () => navigation.goBack();
-  const changeQuery = (value: string) => setSearchQuery(value);
-  const addContact = (item: ContactProps) => {
+  const changeQuery = async (value: string) => {
+    setSearchQuery(value);
+    let result = await firebase.default
+      .firestore()
+      .collection("users")
+      .orderBy("nickname")
+      .startAt(searchQuery)
+      .endAt(searchQuery + "\uf8ff")
+      .get();
+    let docs = result.docs as firebase.default.firestore.QueryDocumentSnapshot<ContactProps>[];
+    setResults(docs);
+  };
+  const addContact = async (item: ContactProps) => {
     let db = firebase.default.firestore().collection("users");
-    // db.doc(item.userUID).
+    let result = await firebase.default.firestore().collection("rooms").add({
+      default: null,
+    });
+    await db
+      .doc(item.userUID)
+      .collection("contacts")
+      .doc(firebase.default.auth().currentUser?.uid)
+      .set({
+        roomID: result.id,
+        userUID: firebase.default.auth().currentUser?.uid,
+      });
+    await db
+      .doc(firebase.default.auth().currentUser?.uid)
+      .collection("contacts")
+      .doc(item.userUID)
+      .set({
+        roomID: result.id,
+        userUID: item.userUID,
+      });
+    navigation.goBack();
   };
   return (
     <SafeAreaView style={styles.body}>
@@ -44,29 +79,23 @@ function Search() {
           <IconButton icon="arrow-left" onPress={goBack} color={activeColor} />
         }
         center={
-          <View style={styles.searchField}>
-            <TextInput
-              value={searchQuery}
-              onChangeText={changeQuery}
-              style={{ flex: 1 }}
-              placeholder="Search anything"
-              placeholderTextColor={colors.placeholder}
-            />
-          </View>
+          <TextInput
+            value={searchQuery}
+            onChangeText={changeQuery}
+            style={styles.searchField}
+            placeholder="Search anything"
+            placeholderTextColor={colors.placeholder}
+          />
         }
       />
       <FlatList
         data={results}
         renderItem={({ item, index }) => (
-          <Contact
-            nickname={item.nickname}
-            description={item.description}
-            profilePicture={item.profilePicture}
-            onPress={() => addContact(item)}
-            userUID={item.userUID}
-          />
+          <Contact {...item.data()} onPress={() => addContact(item.data())} />
         )}
       />
     </SafeAreaView>
   );
 }
+
+export { Search };

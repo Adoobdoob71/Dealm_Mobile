@@ -6,6 +6,7 @@ import { Settings } from "../screens/Settings";
 import { Register } from "../screens/Register";
 import { CreatePost } from "../screens/CreatePost";
 import { Chat } from "../screens/Chat";
+import { Search } from "../screens/Search";
 
 const Stack = createStackNavigator();
 
@@ -40,6 +41,11 @@ function StackNavigator() {
       <Stack.Screen
         name="ChatScreen"
         component={Chat}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SearchScreen"
+        component={Search}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
