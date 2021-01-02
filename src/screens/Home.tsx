@@ -23,7 +23,7 @@ function Home() {
     let db = firebase.default
       .firestore()
       .collection("users")
-      .doc("3qfdDWksBrcc7ofXfwRmbhJQDSw2")
+      .doc("QBYEeY3LJFZIVA5B2Obn7jdNQ8u2")
       .collection("posts");
     db.get().then((snapshot) => {
       let arr = snapshot.docs as firebase.default.firestore.QueryDocumentSnapshot<PostProps>[];
@@ -44,8 +44,8 @@ function Home() {
             />
             <Button
               mode="text"
-              text="Create post"
-              onPress={openCreatePostWindow}
+              text="Settings"
+              onPress={openSettingsWindow}
               fontSize={10}
             />
           </View>

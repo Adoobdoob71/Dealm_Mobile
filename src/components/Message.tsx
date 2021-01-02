@@ -48,9 +48,10 @@ function Message(props: MessageProps) {
     let smallerThan3600 = differenceInSecs < 3600;
     let smallerThan86400 = differenceInSecs < 86400;
 
-    if (smallerThan60) return differenceInSecs + " seconds ago";
+    if (smallerThan60) return differenceInSecs.toFixed(0) + " seconds ago";
 
-    if (smallerThan3600) return differenceInSecs.toFixed(0) + " mins ago";
+    if (smallerThan3600)
+      return (differenceInSecs / 60).toFixed(0) + " mins ago";
 
     if (smallerThan86400)
       return (differenceInSecs / 3600).toFixed(0) + " hours ago";

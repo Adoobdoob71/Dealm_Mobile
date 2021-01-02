@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  InteractionManager,
+  Alert,
 } from "react-native";
 import { IconButton, useTheme } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
 import * as firebase from "firebase";
-import { PostProps } from "./Classes";
+import { PostProps, RoomProps } from "./Classes";
 
 function Post(props: PostProps) {
   const { colors } = useTheme();
@@ -75,7 +77,24 @@ function Post(props: PostProps) {
 
   const openPost = () => navigation.navigate("PostScreen", { ...props });
 
-  const replyPrivately = () => navigation.navigate("ChatScreen", { ...props });
+  const replyPrivately = () => {
+    InteractionManager.runAfterInteractions(() => {
+      firebase.default
+        .firestore()
+        .collection("users")
+        .doc(firebase.default.auth().currentUser?.uid)
+        .collection("contacts")
+        .doc(props.userUID)
+        .get()
+        .then((result) => {
+          let room = result as firebase.default.firestore.QueryDocumentSnapshot<RoomProps>;
+          navigation.navigate("ChatScreen", {
+            ...props,
+            roomID: room.data().roomID,
+          });
+        });
+    });
+  };
 
   const timestamp = (): string => {
     let differenceInMins =

@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+  Alert,
   Dimensions,
   ImageBackground,
   SafeAreaView,
@@ -15,27 +16,24 @@ import { Header } from "../components/Header";
 import { Message, MessageProps } from "../components/Message";
 import { UserStatus } from "../components/UserStatus";
 import * as ImagePicker from "expo-image-picker";
-import * as firease from "firebase";
-
-interface ChatProps {
-  userUID?: string;
-  user?: User;
-  replyToPost?: boolean;
-}
+import * as firebase from "firebase";
 
 function Chat({ route }: any) {
   const { colors } = useTheme();
-  const [messages, setMessages] = React.useState<MessageProps[]>([]);
+  const [messages, setMessages] = React.useState<
+    firebase.default.firestore.QueryDocumentSnapshot<MessageProps>[]
+  >([]);
   const [imageBlob, setImageBlob] = React.useState<Blob | null>(null);
   const [imageUri, setImageUri] = React.useState<string>("");
   const [message, setMessage] = React.useState<string | null>("");
   const [textMessage, setTextMessage] = React.useState<string>("");
-  const [submitting, setSubmitting] = React.useState<boolean>(true);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [userDetails, setUserDetails] = React.useState<User | null>(null);
 
   const { isThemeDark } = React.useContext(PreferencesContext);
   const activeColor = isThemeDark ? colors.primary : colors.text;
   const flatListHeight = Dimensions.get("screen").height - 56 - 100;
-  const { profilePicture, nickname, userUID } = route.params;
+  const { profilePicture, nickname, userUID, roomID } = route.params;
   const styles = StyleSheet.create({
     chatBox: {
       width: "100%",
@@ -70,6 +68,29 @@ function Chat({ route }: any) {
     },
   });
 
+  React.useEffect(() => {
+    firebase.default
+      .firestore()
+      .collection("users")
+      .doc(firebase.default.auth().currentUser?.uid)
+      .get()
+      .then((result) => {
+        let details = result as firebase.default.firestore.QueryDocumentSnapshot<User>;
+        setUserDetails(details.data());
+      });
+    let unsub = firebase.default
+      .firestore()
+      .collection("rooms")
+      .doc(roomID)
+      .collection("messages")
+      .orderBy("time", "asc")
+      .onSnapshot((snapshot) => {
+        let msgs = snapshot.docs as firebase.default.firestore.QueryDocumentSnapshot<MessageProps>[];
+        setMessages(msgs);
+      });
+    return unsub;
+  }, []);
+
   const pickImage = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -89,10 +110,26 @@ function Chat({ route }: any) {
   };
 
   const sendText = async () => {
-    if (textMessage.trim().length == 0) {
+    if (textMessage.trim().length == 0 || userDetails === null) {
+      Alert.alert("something's wrong");
       return;
     }
-    // firebase.default.firestore().collection("rooms").doc()
+    setSubmitting(true);
+    let newMessage: MessageProps = {
+      nickname: userDetails?.nickname,
+      profilePicture: userDetails?.profilePicture,
+      text: textMessage.trim(),
+      time: firebase.default.firestore.Timestamp.now(),
+      userUID: userDetails?.userUID,
+    };
+    await firebase.default
+      .firestore()
+      .collection("rooms")
+      .doc(roomID)
+      .collection("messages")
+      .add(newMessage);
+    setTextMessage("");
+    setSubmitting(false);
   };
 
   const onChangeTextMessage = (value: string) => setTextMessage(value);
@@ -122,7 +159,7 @@ function Chat({ route }: any) {
       <FlatList
         data={messages}
         style={{ flex: 1 }}
-        renderItem={({ item }) => <Message {...item} />}
+        renderItem={({ item }) => <Message {...item.data()} />}
       />
       <View style={styles.chatBox}>
         <View style={styles.specialDataView}>
@@ -163,6 +200,7 @@ function Chat({ route }: any) {
             icon="send"
             color={activeColor}
             size={16}
+            disabled={submitting || userDetails === null}
             onPress={sendText}
           />
         </View>
@@ -171,4 +209,4 @@ function Chat({ route }: any) {
   );
 }
 
-export { Chat, ChatProps };
+export { Chat };

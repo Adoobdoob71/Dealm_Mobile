@@ -25,6 +25,7 @@ function Header(props: HeaderProps) {
       height: 56,
       borderWidth: 0,
       backgroundColor: props.transparent ? "transparent" : colors.surface,
+      elevation: 4,
     },
     headerCenterView: {
       flex: 1,

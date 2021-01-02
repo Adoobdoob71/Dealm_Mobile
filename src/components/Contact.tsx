@@ -59,7 +59,7 @@ function Contact(props: ContactProps) {
             <Text style={styles.contactNickname}>{props.nickname}</Text>
             <Text style={styles.contactDescription}>{props.description}</Text>
           </View>
-          <Menu
+          {/* <Menu
             anchor={
               <IconButton
                 icon="chevron-down"
@@ -79,7 +79,7 @@ function Contact(props: ContactProps) {
               title={`Follow ${props.nickname}`}
               disabled={!firebase.default.auth().currentUser}
             />
-          </Menu>
+          </Menu> */}
         </View>
       </TouchableRipple>
       {/* <View style={styles.bar}></View> */}

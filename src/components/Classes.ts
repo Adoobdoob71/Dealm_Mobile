@@ -33,7 +33,7 @@ interface ContactProps {
   description: string;
   userUID: string;
   onPress?: () => void;
-  roomID: string;
+  roomID?: string;
 }
 
 interface ReplyProps {
@@ -45,10 +45,10 @@ interface ReplyProps {
 
 interface MessageProps {
   text: string;
-  userUID: string;
-  nickname: string;
-  profilePicture: string;
-  time: firebase.default.firestore.Timestamp;
+  userUID?: string;
+  nickname?: string;
+  profilePicture?: string;
+  time?: firebase.default.firestore.Timestamp;
   imageUrl?: string;
   replyData?: ReplyProps;
 }
