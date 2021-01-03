@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   Alert,
   Dimensions,
+  FlatListProps,
   ImageBackground,
   SafeAreaView,
   StyleSheet,
@@ -29,10 +30,12 @@ function Chat({ route }: any) {
   const [textMessage, setTextMessage] = React.useState<string>("");
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [userDetails, setUserDetails] = React.useState<User | null>(null);
+  const [online, setOnline] = React.useState<boolean>(false);
+  const flatListRef = React.useRef(null);
 
   const { isThemeDark } = React.useContext(PreferencesContext);
+  const flatListHeight = 0;
   const activeColor = isThemeDark ? colors.primary : colors.text;
-  const flatListHeight = Dimensions.get("screen").height - 56 - 100;
   const { profilePicture, nickname, userUID, roomID } = route.params;
   const styles = StyleSheet.create({
     chatBox: {
@@ -68,16 +71,7 @@ function Chat({ route }: any) {
     },
   });
 
-  React.useEffect(() => {
-    firebase.default
-      .firestore()
-      .collection("users")
-      .doc(firebase.default.auth().currentUser?.uid)
-      .get()
-      .then((result) => {
-        let details = result as firebase.default.firestore.QueryDocumentSnapshot<User>;
-        setUserDetails(details.data());
-      });
+  const loadMessages = () => {
     let unsub = firebase.default
       .firestore()
       .collection("rooms")
@@ -87,8 +81,42 @@ function Chat({ route }: any) {
       .onSnapshot((snapshot) => {
         let msgs = snapshot.docs as firebase.default.firestore.QueryDocumentSnapshot<MessageProps>[];
         setMessages(msgs);
+        // flatListRef.current.scrollToEnd({ animated: true });
       });
     return unsub;
+  };
+
+  const loadUserData = () => {
+    firebase.default
+      .firestore()
+      .collection("users")
+      .doc(firebase.default.auth().currentUser?.uid)
+      .get()
+      .then((result) => {
+        let details = result as firebase.default.firestore.QueryDocumentSnapshot<User>;
+        setUserDetails(details.data());
+      });
+  };
+
+  const GuestOnlineStatus = () => {
+    let unsub = firebase.default
+      .firestore()
+      .collection("users")
+      .doc(userUID)
+      .onSnapshot((result) => {
+        let user = result as firebase.default.firestore.QueryDocumentSnapshot<User>;
+        setOnline(user.data().online);
+      });
+    return unsub;
+  };
+  React.useEffect(() => {
+    loadUserData();
+    loadMessages();
+    GuestOnlineStatus();
+    return () => {
+      loadMessages();
+      GuestOnlineStatus();
+    };
   }, []);
 
   const pickImage = async () => {
@@ -139,12 +167,11 @@ function Chat({ route }: any) {
     setImageUri("");
   };
 
-  React.useEffect(() => {}, []);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Header
         center={
-          <UserStatus nickname={nickname} status={true} userUID={userUID} />
+          <UserStatus nickname={nickname} status={online} userUID={userUID} />
         }
         left={<BackButton imageUrl={profilePicture} />}
         right={
@@ -158,7 +185,8 @@ function Chat({ route }: any) {
       />
       <FlatList
         data={messages}
-        style={{ flex: 1 }}
+        ref={flatListRef}
+        style={{ height: flatListHeight, width: "100%" }}
         renderItem={({ item }) => <Message {...item.data()} />}
       />
       <View style={styles.chatBox}>

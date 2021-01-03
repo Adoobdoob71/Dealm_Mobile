@@ -10,51 +10,8 @@ import { Contacts } from "../screens/Contacts";
 import { Profile } from "../screens/Profile";
 import { useTheme } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
-
-// const tabs: TabsConfig<BubbleTabBarItemConfig> = {
-//   Home: {
-//     labelStyle: {
-//       color: '#603F83',
-//     },
-//     icon: {
-//       component: <MaterialCommunityIcons name="home" color="#603F83" size={14}/>,
-//       activeColor: '#603F83',
-//       inactiveColor: '#000000',
-//     },
-//     background: {
-//       activeColor: '#603F8377',
-//       inactiveColor: '#603F8300',
-//     },
-//   },
-//   Contacts: {
-//     labelStyle: {
-//       color: '#603F83',
-//     },
-//     icon: {
-//       component: <MaterialCommunityIcons name="account-multiple-outline" color="#603F83" size={14}/>,
-//       activeColor: '#603F83',
-//       inactiveColor: '#000000',
-//     },
-//     background: {
-//       activeColor: '#603F8377',
-//       inactiveColor: '#603F8300',
-//     },
-//   },
-//   Profile: {
-//     labelStyle: {
-//       color: '#603F83',
-//     },
-//     icon: {
-//       component: <MaterialCommunityIcons name="account-outline" color="#603F83" size={14}/>,
-//       activeColor: '#603F83',
-//       inactiveColor: '#000000',
-//     },
-//     background: {
-//       activeColor: '#603F8377',
-//       inactiveColor: '#603F8300',
-//     },
-//   },
-// };
+import { Alert, AppState, AppStateStatus } from "react-native";
+import * as firebase from "firebase";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -62,17 +19,35 @@ export default function BottomNavigator() {
   const { colors } = useTheme();
   const { isThemeDark } = React.useContext(PreferencesContext);
   const activeColor = isThemeDark ? colors.primary : colors.text;
+  const [appState, setAppState] = React.useState<AppStateStatus>(
+    AppState.currentState
+  );
+
+  const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+    const userUID = await firebase.default.auth().currentUser?.uid;
+    if (nextAppState === "active") {
+      firebase.default.firestore().collection("users").doc(userUID).update({
+        online: true,
+      });
+    } else {
+      firebase.default.firestore().collection("users").doc(userUID).update({
+        online: false,
+      });
+    }
+    setAppState(nextAppState);
+  };
+
+  React.useEffect(() => {
+    AppState.addEventListener("change", handleAppStateChange);
+  }, []);
+
   return (
     <Tab.Navigator
       barStyle={{ backgroundColor: colors.surface }}
       shifting={false}
       activeColor={activeColor}
       inactiveColor={colors.disabled}
-      initialRouteName="Home"
-      // tabBar={(props: any) => (
-      //   <AnimatedTabBar tabs={tabs} {...props} />
-      // )}
-    >
+      initialRouteName="Home">
       <Tab.Screen
         name="Home"
         component={Home}

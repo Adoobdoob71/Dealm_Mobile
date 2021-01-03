@@ -25,9 +25,8 @@ function Message(props: MessageProps) {
       marginHorizontal: 10,
     },
     nickname: {
-      fontSize: 14,
-      fontWeight: "bold",
-      color: colors.text,
+      fontSize: 12,
+      color: colors.placeholder,
     },
     body: {
       fontSize: 12,
@@ -47,8 +46,6 @@ function Message(props: MessageProps) {
     let smallerThan60 = differenceInSecs < 60;
     let smallerThan3600 = differenceInSecs < 3600;
     let smallerThan86400 = differenceInSecs < 86400;
-
-    if (smallerThan60) return differenceInSecs.toFixed(0) + " seconds ago";
 
     if (smallerThan3600)
       return (differenceInSecs / 60).toFixed(0) + " mins ago";

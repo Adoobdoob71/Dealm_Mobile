@@ -65,10 +65,10 @@ function Contacts() {
             .get();
           let contact = (result as firebase.default.firestore.QueryDocumentSnapshot<ContactProps>).data();
           contact.roomID = item.data().roomID;
-          contacts.push(contact);
-          // setContacts([...contacts, contact]);
+          // contacts.push(contact);
+          setContacts([...contacts, contact]);
         });
-        setContacts(contacts);
+        // setContacts(contacts);
         setLoading(false);
       });
   };

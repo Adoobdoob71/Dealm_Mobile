@@ -1,6 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import * as React from "react";
-import { Alert, FlatList, SafeAreaView, Text, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  InteractionManager,
+  SafeAreaView,
+  Text,
+  View,
+} from "react-native";
 import { PreferencesContext } from "../../Theming";
 import { Button } from "../components/Button";
 import { Header } from "../components/Header";
@@ -11,10 +18,20 @@ import { useTheme } from "react-native-paper";
 function Home() {
   const { colors } = useTheme();
   const navigation = useNavigation();
-  const openLoginWindow = () => navigation.navigate("Login");
-  const openSettingsWindow = () => navigation.navigate("Settings");
-  const openRegisterWindow = () => navigation.navigate("Register");
-  const openCreatePostWindow = () => navigation.navigate("CreatePost");
+  const openLoginWindow = () =>
+    InteractionManager.runAfterInteractions(() => navigation.navigate("Login"));
+  const openSettingsWindow = () =>
+    InteractionManager.runAfterInteractions(() =>
+      navigation.navigate("Settings")
+    );
+  const openRegisterWindow = () =>
+    InteractionManager.runAfterInteractions(() =>
+      navigation.navigate("Register")
+    );
+  const openCreatePostWindow = () =>
+    InteractionManager.runAfterInteractions(() =>
+      navigation.navigate("CreatePost")
+    );
   const [posts, setPosts] = React.useState<
     firebase.default.firestore.QueryDocumentSnapshot<PostProps>[]
   >([]);
@@ -36,6 +53,12 @@ function Home() {
         title="Home"
         right={
           <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Button
+              mode="text"
+              text="Register"
+              onPress={openRegisterWindow}
+              fontSize={10}
+            />
             <Button
               mode="text"
               text="Login"

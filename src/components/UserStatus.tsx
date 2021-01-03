@@ -32,7 +32,6 @@ function UserStatus({ nickname, status, userUID }: UserStatusProps) {
       width: 6,
       height: 6,
       borderRadius: 3,
-      display: status ? "flex" : "none",
       backgroundColor: status ? "#17ff3e" : "#6b6b6b",
     },
   });

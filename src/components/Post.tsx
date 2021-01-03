@@ -128,6 +128,7 @@ function Post(props: PostProps) {
           size={16}
           color={activeColor}
           onPress={replyPrivately}
+          disabled={firebase.default.auth().currentUser?.uid === props.userUID}
         />
       </View>
       <View style={styles.middle}>
