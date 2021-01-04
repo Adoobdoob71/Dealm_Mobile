@@ -47,8 +47,9 @@ function Contacts() {
   });
 
   const loadContacts = () => {
-    setContacts([]);
     setLoading(true);
+    contacts.splice(0, contacts.length);
+    setContacts([]);
     firebase.default
       .firestore()
       .collection("users")
@@ -65,10 +66,9 @@ function Contacts() {
             .get();
           let contact = (result as firebase.default.firestore.QueryDocumentSnapshot<ContactProps>).data();
           contact.roomID = item.data().roomID;
-          // contacts.push(contact);
-          setContacts([...contacts, contact]);
+          contacts.push(contact);
+          setContacts(contacts);
         });
-        // setContacts(contacts);
         setLoading(false);
       });
   };
@@ -117,7 +117,7 @@ function Contacts() {
           <RefreshControl
             refreshing={loading}
             onRefresh={loadContacts}
-            colors={[colors.primary]}
+            colors={[colors.accent]}
             progressBackgroundColor={colors.surface}
           />
         }

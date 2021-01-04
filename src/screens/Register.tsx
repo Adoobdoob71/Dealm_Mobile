@@ -174,7 +174,7 @@ function Register() {
           <Header
             left={
               <IconButton
-                icon="arrow-left"
+                icon="close"
                 color={activeColor}
                 onPress={goBack}
                 size={24}
