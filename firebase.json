@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "mobile-dealm",
     "public": "web-build",
     "ignore": [
       "firebase.json",

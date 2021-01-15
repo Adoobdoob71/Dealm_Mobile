@@ -28,7 +28,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "Dealm app built with Expo for both android, iOS and the web",
+    "description": "Dealm, built with Expo",
     "githubUrl": "https://github.com/Adoobdoob71/Dealm_Mobile"
   }
 }

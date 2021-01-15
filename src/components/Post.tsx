@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Dimensions,
   InteractionManager,
-  Alert,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { IconButton, useTheme } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
@@ -112,33 +112,39 @@ function Post(props: PostProps) {
     return (differenceInMins / 1440).toFixed(0) + " days ago";
   };
 
+  const openPostWindow = () => navigation.navigate("PostScreen", { ...props });
+
   return (
-    <View style={styles.mainView}>
-      <View style={styles.top}>
-        <Image
-          source={{ uri: props.profilePicture }}
-          style={styles.profilePicture}
-        />
-        <View style={styles.userDetailsView}>
-          <Text style={styles.nickname}>{props.nickname}</Text>
-          <Text style={styles.timestamp}>{timestamp()}</Text>
+    <TouchableWithoutFeedback onPress={openPostWindow}>
+      <View style={styles.mainView}>
+        <View style={styles.top}>
+          <Image
+            source={{ uri: props.profilePicture }}
+            style={styles.profilePicture}
+          />
+          <View style={styles.userDetailsView}>
+            <Text style={styles.nickname}>{props.nickname}</Text>
+            <Text style={styles.timestamp}>{timestamp()}</Text>
+          </View>
+          <IconButton
+            icon="send"
+            size={16}
+            color={activeColor}
+            onPress={replyPrivately}
+            disabled={
+              firebase.default.auth().currentUser?.uid === props.userUID
+            }
+          />
         </View>
-        <IconButton
-          icon="send"
-          size={16}
-          color={activeColor}
-          onPress={replyPrivately}
-          disabled={firebase.default.auth().currentUser?.uid === props.userUID}
-        />
+        <View style={styles.middle}>
+          <Text style={styles.title}>{props.title}</Text>
+          <Text style={styles.body}>{props.body}</Text>
+          <TouchableOpacity onPress={openImage}>
+            <Image source={{ uri: props.imageUrl }} style={styles.postImage} />
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.middle}>
-        <Text style={styles.title}>{props.title}</Text>
-        <Text style={styles.body}>{props.body}</Text>
-        <TouchableOpacity onPress={openImage}>
-          <Image source={{ uri: props.imageUrl }} style={styles.postImage} />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

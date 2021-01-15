@@ -5,8 +5,8 @@ import AnimatedTabBar, {
   BubbleTabBarItemConfig,
 } from "@gorhom/animated-tabbar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Home } from "../screens/Home";
-import { Contacts } from "../screens/Contacts";
+import Home from "../screens/Home";
+import Contacts from "../screens/Contacts";
 import { Profile } from "../screens/Profile";
 import { useTheme } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
@@ -24,13 +24,13 @@ export default function BottomNavigator() {
   );
 
   const handleAppStateChange = async (nextAppState: AppStateStatus) => {
-    const userUID = await firebase.default.auth().currentUser?.uid;
+    const user = await firebase.default.auth().currentUser;
     if (nextAppState === "active") {
-      firebase.default.firestore().collection("users").doc(userUID).update({
+      firebase.default.firestore().collection("users").doc(user?.uid).update({
         online: true,
       });
     } else {
-      firebase.default.firestore().collection("users").doc(userUID).update({
+      firebase.default.firestore().collection("users").doc(user?.uid).update({
         online: false,
       });
     }

@@ -2,6 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as React from "react";
 import {
   Alert,
+  InteractionManager,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -10,121 +11,145 @@ import {
   View,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { IconButton, useTheme } from "react-native-paper";
+import { IconButton, useTheme, withTheme } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
 import { Contact, ContactProps } from "../components/Contact";
 import { Header } from "../components/Header";
 import * as firebase from "firebase";
-import { RoomProps } from "../components/Classes";
+import { RoomProps, User } from "../components/Classes";
 
-function Contacts() {
-  const { colors } = useTheme();
-  const navigation = useNavigation();
-  const [contacts, setContacts] = React.useState<ContactProps[]>([]);
-  const [loading, setLoading] = React.useState<boolean>(false);
+interface state {
+  contacts: ContactProps[];
+  loading: boolean;
+}
+class Contacts extends React.Component<any, state> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      contacts: [],
+      loading: false,
+    };
+  }
 
-  const { isThemeDark } = React.useContext(PreferencesContext);
-  const styles = StyleSheet.create({
-    header: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      paddingHorizontal: 8,
-      paddingVertical: 6,
-      backgroundColor: colors.surface,
-    },
-    seperator: {
-      marginLeft: 64,
-      marginRight: 16,
-      height: 0.5,
-      backgroundColor: colors.placeholder,
-    },
-    headerText: {
-      fontSize: 21,
-      fontWeight: "bold",
-      color: colors.text,
-      marginLeft: 8,
-    },
-  });
+  static contextType = PreferencesContext;
 
-  const loadContacts = () => {
-    setLoading(true);
-    contacts.splice(0, contacts.length);
-    setContacts([]);
-    firebase.default
+  loadContacts = async () => {
+    this.setState({ loading: true, contacts: [] });
+    let user = await firebase.default.auth().currentUser;
+    let data = await firebase.default
       .firestore()
       .collection("users")
-      .doc(firebase.default.auth().currentUser?.uid)
+      .doc(user?.uid)
       .collection("contacts")
-      .get()
-      .then((data) => {
-        let arr = data.docs as firebase.default.firestore.QueryDocumentSnapshot<RoomProps>[];
-        arr.forEach(async (item) => {
-          let result = await firebase.default
-            .firestore()
-            .collection("users")
-            .doc(item.data().userUID)
-            .get();
-          let contact = (result as firebase.default.firestore.QueryDocumentSnapshot<ContactProps>).data();
-          contact.roomID = item.data().roomID;
-          contacts.push(contact);
-          setContacts(contacts);
-        });
-        setLoading(false);
-      });
+      .get();
+    let arr = data.docs as firebase.default.firestore.QueryDocumentSnapshot<RoomProps>[];
+    arr.forEach(async (item) => {
+      const result = await firebase.default
+        .firestore()
+        .collection("users")
+        .doc(item.data().userUID)
+        .get();
+      const contactData = result.data() as ContactProps;
+      contactData.roomID = item.data().roomID;
+      this.setState({ contacts: [...this.state.contacts, contactData] });
+    });
+    this.setState({ loading: false });
   };
-  React.useEffect(() => {
+
+  componentDidMount() {
     firebase.default.auth().onAuthStateChanged((user) => {
       if (user) {
-        loadContacts();
+        this.loadContacts();
       } else {
-        setContacts([]);
+        this.setState({ contacts: [] });
       }
     });
-  }, []);
+  }
 
-  const seperator = () => <View style={styles.seperator}></View>;
+  sortContacts = () => {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({
+        contacts: this.state.contacts.sort((itemFirst, itemSecond) => {
+          return -(itemFirst.nickname.length - itemSecond.nickname.length);
+        }),
+      });
+    });
+  };
 
-  const openSearchScreen = () => navigation.navigate("SearchScreen");
-  const openRoomScreen = (item: ContactProps) =>
-    navigation.navigate("ChatScreen", { ...item });
+  render() {
+    const colors = this.props.theme.colors;
+    const { isThemeDark } = this.context;
+    const activeColor = isThemeDark ? colors.primary : colors.text;
+    const openSearchScreen = () =>
+      this.props.navigation.navigate("SearchScreen");
+    const openRoomScreen = (item: ContactProps) =>
+      this.props.navigation.navigate("ChatScreen", { ...item });
 
-  const right = (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
-      <IconButton
-        icon="magnify"
-        onPress={openSearchScreen}
-        color={isThemeDark ? colors.primary : colors.text}
-        size={21}
-      />
-      <IconButton
-        icon="sort"
-        onPress={() => {}}
-        color={isThemeDark ? colors.primary : colors.text}
-        size={21}
-      />
-    </View>
-  );
+    const styles = StyleSheet.create({
+      header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingHorizontal: 8,
+        paddingVertical: 6,
+        backgroundColor: colors.surface,
+      },
+      seperator: {
+        marginLeft: 64,
+        marginRight: 16,
+        height: 0.5,
+        backgroundColor: colors.placeholder,
+      },
+      headerText: {
+        fontSize: 21,
+        fontWeight: "bold",
+        color: colors.text,
+        marginLeft: 8,
+      },
+    });
 
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Header title="Contacts" right={right} />
-      <FlatList
-        data={contacts}
-        renderItem={({ item, index }) => (
-          <Contact {...item} key={index} onPress={() => openRoomScreen(item)} />
-        )}
-        refreshControl={
-          <RefreshControl
-            refreshing={loading}
-            onRefresh={loadContacts}
-            colors={[colors.accent]}
-            progressBackgroundColor={colors.surface}
-          />
-        }
-        ItemSeparatorComponent={seperator}
-      />
-    </SafeAreaView>
-  );
+    const right = (
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <IconButton
+          icon="magnify"
+          onPress={openSearchScreen}
+          color={activeColor}
+          size={21}
+        />
+        <IconButton
+          icon="sort"
+          onPress={this.sortContacts}
+          color={activeColor}
+          size={21}
+        />
+      </View>
+    );
+    const seperator = () => <View style={styles.seperator}></View>;
+
+    return (
+      <SafeAreaView style={{ flex: 1 }}>
+        <Header title="Contacts" right={right} />
+        <FlatList
+          data={this.state.contacts}
+          renderItem={({ item, index }) => (
+            <Contact
+              {...item}
+              key={index}
+              onPress={() => openRoomScreen(item)}
+            />
+          )}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={this.loadContacts}
+              colors={[colors.accent]}
+              progressBackgroundColor={colors.surface}
+            />
+          }
+          ItemSeparatorComponent={seperator}
+        />
+      </SafeAreaView>
+    );
+  }
 }
 
-export { Contacts };
+export default withTheme(Contacts);

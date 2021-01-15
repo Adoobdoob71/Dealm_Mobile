@@ -252,8 +252,8 @@ function Register() {
             />
           </ScrollView>
         </ImageBackground>
+        {message && <Alert message={message} action={true} />}
       </SafeAreaView>
-      {message && <Alert message={message} action={true} />}
     </>
   );
 }

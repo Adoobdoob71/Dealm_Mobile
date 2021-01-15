@@ -23,9 +23,8 @@ function Header(props: HeaderProps) {
       alignItems: "center",
       paddingHorizontal: 8,
       height: 56,
-      borderWidth: 0,
+      width: "100%",
       backgroundColor: props.transparent ? "transparent" : colors.surface,
-      elevation: 4,
     },
     headerCenterView: {
       flex: 1,
@@ -62,10 +61,20 @@ function Header(props: HeaderProps) {
         ) : (
           <View style={styles.headerTitleView}>
             {props.title && (
-              <Text style={styles.headerTitle}>{props.title}</Text>
+              <Text
+                style={styles.headerTitle}
+                ellipsizeMode="tail"
+                numberOfLines={1}>
+                {props.title}
+              </Text>
             )}
             {props.subTitle && (
-              <Text style={styles.headerSubtitle}>{props.subTitle}</Text>
+              <Text
+                style={styles.headerSubtitle}
+                ellipsizeMode="tail"
+                numberOfLines={1}>
+                {props.subTitle}
+              </Text>
             )}
           </View>
         )}

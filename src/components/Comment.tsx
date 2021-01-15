@@ -1,0 +1,73 @@
+import * as React from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { useTheme } from "react-native-paper";
+import * as firebase from "firebase";
+
+interface CommentProps {
+  nickname: string;
+  userUID: string;
+  profilePicture: string;
+  text: string;
+  time: firebase.default.firestore.Timestamp;
+}
+function Comment(props: CommentProps) {
+  const { colors } = useTheme();
+  const styles = StyleSheet.create({
+    mainView: {
+      padding: 8,
+    },
+    topView: {
+      flexDirection: "row",
+    },
+    nickname: {
+      fontSize: 14,
+      color: colors.text,
+      fontWeight: "bold",
+    },
+    text: {
+      fontSize: 14,
+      color: colors.text,
+    },
+    profilePicture: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+    },
+    timestamp: {
+      color: colors.placeholder,
+      fontSize: 12,
+    },
+  });
+
+  const timestamp = (): string => {
+    let differenceInMins =
+      (firebase.default.firestore.Timestamp.now().toMillis() -
+        props.time.toMillis()) /
+      60000;
+    let smallerThan60 = differenceInMins < 60;
+    let smallerThan1440 = differenceInMins < 1440;
+
+    if (smallerThan60) return differenceInMins.toFixed(0) + " mins ago";
+
+    if (smallerThan1440)
+      return (differenceInMins / 60).toFixed(0) + " hours ago";
+
+    return (differenceInMins / 1440).toFixed(0) + " days ago";
+  };
+
+  return (
+    <View style={styles.mainView}>
+      <View style={styles.topView}>
+        <Image
+          source={{ uri: props.profilePicture }}
+          style={styles.profilePicture}
+        />
+        <Text style={styles.nickname}>{props.nickname}</Text>
+        <Text style={styles.timestamp}>{timestamp()}</Text>
+      </View>
+      <Text style={styles.text}>{props.text}</Text>
+    </View>
+  );
+}
+
+export { Comment, CommentProps };

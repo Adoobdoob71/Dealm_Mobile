@@ -33,16 +33,7 @@ function Profile() {
       } else setUser(null);
     });
   }, []);
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ImageBackground
-        source={{ uri: user?.backgroundPicture }}
-        style={{
-          width: Dimensions.get("window").width,
-          height: 250,
-        }}></ImageBackground>
-    </SafeAreaView>
-  );
+  return <SafeAreaView style={{ flex: 1 }}></SafeAreaView>;
 }
 
 export { Profile };
