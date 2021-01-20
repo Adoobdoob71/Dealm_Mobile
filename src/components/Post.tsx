@@ -75,8 +75,6 @@ function Post(props: PostProps) {
   const openImage = () =>
     navigation.navigate("ImageScreen", { imageUrl: props.imageUrl });
 
-  const openPost = () => navigation.navigate("PostScreen", { ...props });
-
   const replyPrivately = () => {
     InteractionManager.runAfterInteractions(() => {
       firebase.default

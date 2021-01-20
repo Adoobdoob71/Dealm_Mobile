@@ -25,6 +25,7 @@ interface PostProps {
   nickname: string;
   profilePicture: string;
   time: firebase.default.firestore.Timestamp;
+  postID: string;
 }
 
 interface ContactProps {

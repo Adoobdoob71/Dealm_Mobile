@@ -37,9 +37,9 @@ class PostScreen extends React.Component<any, state> {
       let db = firebase.default
         .firestore()
         .collection("users")
-        .doc(this.props.userUID)
+        .doc(this.props.route.params.userUID)
         .collection("posts")
-        .doc(this.props.postID)
+        .doc(this.props.route.params.postID)
         .collection("comments");
       let result = await db.get();
       this.setState({
@@ -58,14 +58,14 @@ class PostScreen extends React.Component<any, state> {
   render() {
     const colors = this.props.theme.colors;
     const navigation = this.props.navigation;
-    const { isThemeDark } = React.useContext(PreferencesContext);
+    const { isThemeDark } = this.context;
     const activeColor = isThemeDark ? colors.primary : colors.text;
 
     const changeBookmarkStatus = () =>
       this.setState({ bookmarked: !this.state.bookmarked });
     const closePostWindow = () => navigation.goBack();
     const openAddCommentWindow = () =>
-      navigation.navigate("CreateCommentScreen", { ...this.props });
+      navigation.navigate("CreateComment", { ...this.props.route.params });
 
     const styles = StyleSheet.create({
       mainView: {
@@ -91,13 +91,13 @@ class PostScreen extends React.Component<any, state> {
                 icon={this.state.bookmarked ? "bookmark" : "bookmark-outline"}
                 color={activeColor}
                 onPress={changeBookmarkStatus}
-                size={21}
+                size={18}
               />
               <IconButton
-                icon="add"
+                icon="plus"
                 color={activeColor}
                 onPress={openAddCommentWindow}
-                size={21}
+                size={18}
               />
             </View>
           }
@@ -108,9 +108,8 @@ class PostScreen extends React.Component<any, state> {
           ItemSeparatorComponent={() => (
             <View
               style={{
-                height: 0.25,
-                backgroundColor: colors.accent,
-                width: "100%",
+                height: 10,
+                backgroundColor: "transaprent",
               }}></View>
           )}
           refreshControl={

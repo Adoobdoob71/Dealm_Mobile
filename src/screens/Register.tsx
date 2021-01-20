@@ -50,6 +50,7 @@ function Register() {
     body: {
       flex: 1,
       backgroundColor: colors.background,
+      position: "relative",
     },
     title: {
       fontSize: 42,
@@ -125,6 +126,7 @@ function Register() {
     if (!validateForm()) {
       setMessage("Check your form, some of the inputs are empty");
       setLoading(false);
+      setTimeout(() => setMessage(null), 5000);
       return;
     }
     try {
@@ -252,8 +254,8 @@ function Register() {
             />
           </ScrollView>
         </ImageBackground>
-        {message && <Alert message={message} action={true} />}
       </SafeAreaView>
+      {message && <Alert message={message} action={true} />}
     </>
   );
 }

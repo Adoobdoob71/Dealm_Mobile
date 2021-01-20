@@ -7,7 +7,8 @@ import { Register } from "../screens/Register";
 import { CreatePost } from "../screens/CreatePost";
 import Chat from "../screens/Chat";
 import { Search } from "../screens/Search";
-import { PostScreen } from "../screens/PostScreen";
+import PostScreen from "../screens/PostScreen";
+import CreateComment from "../screens/CreateComment";
 
 const Stack = createStackNavigator();
 
@@ -52,6 +53,11 @@ function StackNavigator() {
       <Stack.Screen
         name="PostScreen"
         component={PostScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CreateComment"
+        component={CreateComment}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

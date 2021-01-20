@@ -48,6 +48,7 @@ function Login() {
     window: {
       flex: 1,
       backgroundColor: colors.background,
+      position: "relative",
     },
     title: {
       fontSize: 42,

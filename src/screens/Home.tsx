@@ -139,7 +139,7 @@ class Home extends React.Component<any, state> {
         />
         <FlatList
           data={this.state.posts}
-          renderItem={({ item }) => <Post {...item.data()} />}
+          renderItem={({ item }) => <Post {...item.data()} key={item.id} />}
           refreshControl={
             <RefreshControl
               refreshing={this.state.loading}

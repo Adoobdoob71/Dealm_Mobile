@@ -28,8 +28,8 @@ function Alert(props: AlertProps) {
       paddingHorizontal: 10,
       paddingVertical: 8,
       elevation: 1,
-      display: visible ? "flex" : "none",
       margin: 8,
+      display: visible ? "flex" : "none",
     },
     message: {
       fontSize: 12,

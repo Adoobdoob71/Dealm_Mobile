@@ -7,7 +7,7 @@ import AnimatedTabBar, {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Home from "../screens/Home";
 import Contacts from "../screens/Contacts";
-import { Profile } from "../screens/Profile";
+import Profile from "../screens/Profile";
 import { useTheme } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
 import { Alert, AppState, AppStateStatus } from "react-native";

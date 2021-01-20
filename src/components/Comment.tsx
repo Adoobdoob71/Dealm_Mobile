@@ -4,9 +4,9 @@ import { IconButton, useTheme } from "react-native-paper";
 import * as firebase from "firebase";
 
 interface CommentProps {
-  nickname?: string;
-  userUID?: string;
-  profilePicture?: string;
+  nickname?: string | undefined | null;
+  userUID?: string | undefined | null;
+  profilePicture?: string | undefined | null;
   text: string;
   time: firebase.default.firestore.Timestamp;
   likes: number;
@@ -27,22 +27,24 @@ function Comment(props: CommentProps) {
       fontWeight: "bold",
     },
     bullPoint: {
-      fontSize: 10,
+      fontSize: 6,
       color: colors.placeholder,
-      marginHorizontal: 8,
+      marginHorizontal: 4,
     },
     text: {
       fontSize: 14,
       color: colors.text,
+      marginLeft: 36,
     },
     profilePicture: {
-      width: 32,
-      height: 32,
-      borderRadius: 16,
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      marginRight: 8,
     },
     timestamp: {
       color: colors.placeholder,
-      fontSize: 12,
+      fontSize: 10,
     },
   });
 
@@ -70,7 +72,7 @@ function Comment(props: CommentProps) {
           style={styles.profilePicture}
         />
         <Text style={styles.nickname}>{props.nickname}</Text>
-        <Text style={styles.bullPoint}>&bull</Text>
+        <Text style={styles.bullPoint}>{"\u2B24"}</Text>
         <Text style={styles.timestamp}>{timestamp()}</Text>
       </View>
       <Text style={styles.text}>{props.text}</Text>

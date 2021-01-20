@@ -112,6 +112,7 @@ function CreatePost() {
         let downloadUrl = await storageRef.getDownloadURL();
         await db.doc(user?.uid).collection("posts").doc(result.id).update({
           imageUrl: downloadUrl,
+          postID: result.id,
         });
       }
       setMessage("Successfully posted! 🎉");

@@ -45,9 +45,22 @@ class Profile extends React.Component<any, state> {
     const { isThemeDark } = this.context;
     const navigation = this.props.navigation;
     const activeColor = isThemeDark ? colors.primary : colors.text;
+
+    const openCreatePostWindow = () =>
+      this.props.navigation.navigate("CreatePost");
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <Header title="Profile" />
+        <Header
+          title="Profile"
+          right={
+            <IconButton
+              icon="plus"
+              size={18}
+              color={activeColor}
+              onPress={openCreatePostWindow}
+            />
+          }
+        />
       </SafeAreaView>
     );
   }
