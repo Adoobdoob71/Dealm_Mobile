@@ -7,20 +7,26 @@ import {
   ImageBackground,
   Dimensions,
 } from "react-native";
-import { IconButton, useTheme } from "react-native-paper";
+import { IconButton, useTheme, withTheme } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
 import { Header } from "../components/Header";
 import * as firebase from "firebase";
 import { User } from "../components/Classes";
 
-function Profile() {
-  const { isThemeDark } = React.useContext(PreferencesContext);
-  const { colors } = useTheme();
-  const navigation = useNavigation();
-  const [user, setUser] = React.useState<User | null>(null);
+interface state {
+  userDetails: User | null;
+}
+class Profile extends React.Component<any, state> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      userDetails: null,
+    };
+  }
 
-  const activeColor = isThemeDark ? colors.primary : colors.text;
-  React.useEffect(() => {
+  static contextType = PreferencesContext;
+
+  loadUserDetails = () => {
     firebase.default.auth().onAuthStateChanged(async (user) => {
       if (user) {
         let result = await firebase.default
@@ -29,11 +35,22 @@ function Profile() {
           .doc(user.uid)
           .get();
         let userData: User = result.data() as User;
-        setUser(userData);
-      } else setUser(null);
+        this.setState({ userDetails: userData });
+      } else this.setState({ userDetails: null });
     });
-  }, []);
-  return <SafeAreaView style={{ flex: 1 }}></SafeAreaView>;
+  };
+
+  render() {
+    const colors = this.props.theme.colors;
+    const { isThemeDark } = this.context;
+    const navigation = this.props.navigation;
+    const activeColor = isThemeDark ? colors.primary : colors.text;
+    return (
+      <SafeAreaView style={{ flex: 1 }}>
+        <Header title="Profile" />
+      </SafeAreaView>
+    );
+  }
 }
 
-export { Profile };
+export default withTheme(Profile);

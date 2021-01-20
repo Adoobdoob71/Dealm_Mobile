@@ -1,14 +1,15 @@
 import * as React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { useTheme } from "react-native-paper";
+import { IconButton, useTheme } from "react-native-paper";
 import * as firebase from "firebase";
 
 interface CommentProps {
-  nickname: string;
-  userUID: string;
-  profilePicture: string;
+  nickname?: string;
+  userUID?: string;
+  profilePicture?: string;
   text: string;
   time: firebase.default.firestore.Timestamp;
+  likes: number;
 }
 function Comment(props: CommentProps) {
   const { colors } = useTheme();
@@ -18,11 +19,17 @@ function Comment(props: CommentProps) {
     },
     topView: {
       flexDirection: "row",
+      alignItems: "center",
     },
     nickname: {
       fontSize: 14,
       color: colors.text,
       fontWeight: "bold",
+    },
+    bullPoint: {
+      fontSize: 10,
+      color: colors.placeholder,
+      marginHorizontal: 8,
     },
     text: {
       fontSize: 14,
@@ -63,6 +70,7 @@ function Comment(props: CommentProps) {
           style={styles.profilePicture}
         />
         <Text style={styles.nickname}>{props.nickname}</Text>
+        <Text style={styles.bullPoint}>&bull</Text>
         <Text style={styles.timestamp}>{timestamp()}</Text>
       </View>
       <Text style={styles.text}>{props.text}</Text>
