@@ -4,6 +4,7 @@ import {
   Alert,
   FlatList,
   InteractionManager,
+  Platform,
   RefreshControl,
   SafeAreaView,
   Text,
@@ -109,6 +110,14 @@ class Home extends React.Component<any, state> {
           title="Home"
           right={
             <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {Platform.OS === "web" && (
+                <IconButton
+                  icon="refresh"
+                  onPress={() => this.loadPosts()}
+                  size={21}
+                  color={activeColor}
+                />
+              )}
               <Menu
                 anchor={
                   <IconButton

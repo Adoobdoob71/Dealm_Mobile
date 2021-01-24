@@ -13,7 +13,8 @@ function Message(props: MessageProps) {
   const styles = StyleSheet.create({
     mainView: {
       flexDirection: "row",
-      padding: 10,
+      paddingHorizontal: 10,
+      paddingVertical: 8,
     },
     profilePicture: {
       width: 32,
@@ -33,6 +34,35 @@ function Message(props: MessageProps) {
       color: colors.text,
     },
     time: {
+      fontSize: 10,
+      color: colors.placeholder,
+    },
+    specialDataView: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: 8,
+      backgroundColor: `${colors.placeholder}22`,
+      borderRadius: 10,
+      marginHorizontal: 10,
+      paddingHorizontal: 10,
+      paddingVertical: 6,
+    },
+    postImage: {
+      width: 30,
+      height: 30,
+      borderRadius: 6,
+      marginRight: 8,
+    },
+    postDetailView: {
+      flexDirection: "column",
+      flex: 1,
+    },
+    postTitle: {
+      fontSize: 12,
+      color: colors.text,
+      fontWeight: "bold",
+    },
+    postBody: {
       fontSize: 10,
       color: colors.placeholder,
     },
@@ -56,16 +86,40 @@ function Message(props: MessageProps) {
     return (differenceInSecs / 86400).toFixed(0) + " days ago";
   };
   return (
-    <View style={styles.mainView}>
-      <Image
-        source={{ uri: props.profilePicture }}
-        style={styles.profilePicture}
-      />
-      <View style={styles.bodyView}>
-        <Text style={styles.nickname}>{props.nickname}</Text>
-        <Text style={styles.body}>{props.text}</Text>
+    <View>
+      {props.replyData !== undefined && (
+        <View style={styles.specialDataView}>
+          <Image
+            style={styles.postImage}
+            source={{ uri: props.replyData?.imageUrl }}
+          />
+          <View style={styles.postDetailView}>
+            <Text
+              style={styles.postTitle}
+              numberOfLines={1}
+              ellipsizeMode="tail">
+              {props.replyData?.title}
+            </Text>
+            <Text
+              style={styles.postBody}
+              numberOfLines={1}
+              ellipsizeMode="tail">
+              {props.replyData?.body}
+            </Text>
+          </View>
+        </View>
+      )}
+      <View style={styles.mainView}>
+        <Image
+          source={{ uri: props.profilePicture }}
+          style={styles.profilePicture}
+        />
+        <View style={styles.bodyView}>
+          <Text style={styles.nickname}>{props.nickname}</Text>
+          <Text style={styles.body}>{props.text}</Text>
+        </View>
+        <Text style={styles.time}>{timestamp()}</Text>
       </View>
-      <Text style={styles.time}>{timestamp()}</Text>
     </View>
   );
 }

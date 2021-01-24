@@ -3,16 +3,18 @@ import {
   Alert,
   Dimensions,
   FlatListProps,
+  Image,
   ImageBackground,
   SafeAreaView,
   StyleSheet,
+  Text,
   View,
 } from "react-native";
 import { FlatList, TextInput } from "react-native-gesture-handler";
 import { IconButton, useTheme, withTheme } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
 import { BackButton } from "../components/BackButton";
-import { User } from "../components/Classes";
+import { ReplyProps, User } from "../components/Classes";
 import { Header } from "../components/Header";
 import { Message, MessageProps } from "../components/Message";
 import { UserStatus } from "../components/UserStatus";
@@ -28,6 +30,7 @@ interface state {
   submitting: boolean;
   userDetails: User | null;
   online: boolean;
+  replyPrivately: boolean;
 }
 
 interface props {
@@ -48,6 +51,7 @@ class Chat extends React.Component<any, state> {
       submitting: false,
       userDetails: null,
       online: false,
+      replyPrivately: this.props.route.params.postID !== undefined,
     };
   }
 
@@ -128,13 +132,31 @@ class Chat extends React.Component<any, state> {
       return;
     }
     this.setState({ submitting: true });
-    let newMessage: MessageProps = {
-      nickname: this.state.userDetails?.nickname,
-      profilePicture: this.state.userDetails?.profilePicture,
-      text: this.state.textMessage.trim(),
-      time: firebase.default.firestore.Timestamp.now(),
-      userUID: this.state.userDetails?.userUID,
-    };
+    let newMessage: MessageProps;
+    if (this.state.replyPrivately) {
+      let reply: ReplyProps = {
+        body: this.props.route.params.body,
+        time: this.props.route.params.time,
+        title: this.props.route.params.title,
+        imageUrl: this.props.route.params.imageUrl,
+      };
+      newMessage = {
+        nickname: this.state.userDetails?.nickname,
+        profilePicture: this.state.userDetails?.profilePicture,
+        text: this.state.textMessage.trim(),
+        time: firebase.default.firestore.Timestamp.now(),
+        userUID: this.state.userDetails?.userUID,
+        replyData: reply,
+      };
+    } else {
+      newMessage = {
+        nickname: this.state.userDetails?.nickname,
+        profilePicture: this.state.userDetails?.profilePicture,
+        text: this.state.textMessage.trim(),
+        time: firebase.default.firestore.Timestamp.now(),
+        userUID: this.state.userDetails?.userUID,
+      };
+    }
     await firebase.default
       .firestore()
       .collection("rooms")
@@ -142,7 +164,11 @@ class Chat extends React.Component<any, state> {
       .collection("messages")
       .add(newMessage);
 
-    this.setState({ textMessage: "", submitting: false });
+    this.setState({
+      textMessage: "",
+      submitting: false,
+      replyPrivately: false,
+    });
   };
 
   render() {
@@ -169,17 +195,36 @@ class Chat extends React.Component<any, state> {
         marginHorizontal: 8,
         color: colors.text,
       },
-      imageBackground: {
-        display: this.state.imageBlob ? "flex" : "none",
-        height: Dimensions.get("screen").height * 0.3,
-        flex: 1,
-        marginRight: 8,
-      },
       specialDataView: {
-        display: this.state.imageBlob ? "flex" : "none",
         flexDirection: "row",
         alignItems: "center",
         marginBottom: 8,
+        backgroundColor: `${colors.placeholder}22`,
+        borderRadius: 8,
+        padding: 6,
+      },
+      postImage: {
+        width: 40,
+        height: 40,
+        borderRadius: 6,
+        marginRight: 8,
+      },
+      postDetailView: {
+        flexDirection: "column",
+        flex: 1,
+      },
+      postTitle: {
+        fontSize: 14,
+        color: colors.text,
+        fontWeight: "bold",
+      },
+      postBody: {
+        fontSize: 12,
+        color: colors.placeholder,
+      },
+      closeButton: {
+        backgroundColor: `${colors.placeholder}55`,
+        alignSelf: "flex-start",
       },
     });
 
@@ -189,6 +234,8 @@ class Chat extends React.Component<any, state> {
     const removeImage = () => {
       this.setState({ imageBlob: null, imageUri: "" });
     };
+
+    const closeReply = () => this.setState({ replyPrivately: false });
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Header
@@ -217,26 +264,36 @@ class Chat extends React.Component<any, state> {
           renderItem={({ item }) => <Message {...item.data()} />}
         />
         <View style={styles.chatBox}>
-          <View style={styles.specialDataView}>
-            {/* <ImageBackground
-            style={styles.imageBackground}
-            source={{ uri: imageUri }}
-            imageStyle={{ borderRadius: 8 }}>
-            <IconButton
-              icon="close"
-              color={activeColor}
-              onPress={removeImage}
-              size={16}
-              background={colors.backdrop}
-            />
-          </ImageBackground>
-          <IconButton
-            icon="pencil"
-            color={colors.accent}
-            onPress={() => {}}
-            size={16}
-          /> */}
-          </View>
+          {this.props.route.params.postID != undefined &&
+            this.state.replyPrivately && (
+              <View style={styles.specialDataView}>
+                <Image
+                  style={styles.postImage}
+                  source={{ uri: this.props.route.params.imageUrl }}
+                />
+                <View style={styles.postDetailView}>
+                  <Text
+                    style={styles.postTitle}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
+                    {this.props.route.params.title}
+                  </Text>
+                  <Text
+                    style={styles.postBody}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
+                    {this.props.route.params.body}
+                  </Text>
+                </View>
+                <IconButton
+                  icon="close"
+                  style={styles.closeButton}
+                  size={10}
+                  onPress={closeReply}
+                  color={activeColor}
+                />
+              </View>
+            )}
           <View style={styles.chatBoxBottom}>
             {/* <IconButton
             icon="attachment"
@@ -256,7 +313,9 @@ class Chat extends React.Component<any, state> {
               color={activeColor}
               size={16}
               disabled={
-                this.state.submitting || this.state.userDetails === null
+                this.state.submitting ||
+                this.state.userDetails === null ||
+                this.state.textMessage.trim().length === 0
               }
               onPress={this.sendText}
             />

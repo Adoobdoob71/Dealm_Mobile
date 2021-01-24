@@ -3,6 +3,7 @@ import * as React from "react";
 import {
   Alert,
   InteractionManager,
+  Platform,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -115,12 +116,14 @@ class Contacts extends React.Component<any, state> {
           color={activeColor}
           size={21}
         />
-        <IconButton
-          icon="sort"
-          onPress={this.sortContacts}
-          color={activeColor}
-          size={21}
-        />
+        {Platform.OS === "web" && (
+          <IconButton
+            icon="refresh"
+            onPress={this.loadContacts}
+            color={activeColor}
+            size={21}
+          />
+        )}
       </View>
     );
     const seperator = () => <View style={styles.seperator}></View>;
