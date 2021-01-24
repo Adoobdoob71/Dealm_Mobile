@@ -44,7 +44,7 @@ export default function BottomNavigator() {
   return (
     <Tab.Navigator
       barStyle={{ backgroundColor: colors.surface }}
-      shifting={false}
+      shifting={true}
       activeColor={activeColor}
       inactiveColor={colors.disabled}
       initialRouteName="Home">
