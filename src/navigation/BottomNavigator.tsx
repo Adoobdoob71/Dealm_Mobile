@@ -78,6 +78,9 @@ export default function BottomNavigator() {
       <Tab.Screen
         name="Profile"
         component={Profile}
+        initialParams={{
+          bottomNavigator: true,
+        }}
         options={{
           tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons

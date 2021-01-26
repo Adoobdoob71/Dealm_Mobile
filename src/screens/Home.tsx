@@ -7,6 +7,7 @@ import {
   Platform,
   RefreshControl,
   SafeAreaView,
+  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -40,6 +41,7 @@ class Home extends React.Component<any, state> {
     firebase.default.auth().onAuthStateChanged(async (user) => {
       if (user) {
         this.loadPosts(user);
+        this.sortPosts();
       } else {
         this.setState({ posts: [] });
       }
@@ -48,28 +50,40 @@ class Home extends React.Component<any, state> {
 
   loadPosts = async (user?: firebase.default.User | null) => {
     this.setState({ loading: true, posts: [] });
-    if (!user) user = await firebase.default.auth().currentUser;
-    let db = firebase.default.firestore().collection("users");
-    let result = await db.doc(user?.uid).collection("contacts").get();
-    let docs = result.docs as firebase.default.firestore.QueryDocumentSnapshot<RoomProps>[];
-    docs.forEach(async (item) => {
-      let resultItem = await db
-        .doc(item.data().userUID)
+    if (user) {
+      let db = firebase.default.firestore().collection("users");
+      let result = await db
+        .doc(user?.uid)
         .collection("posts")
-        .orderBy("time")
-        .limitToLast(5)
+        .orderBy("time", "desc")
+        .limit(5)
         .get();
-      let arr = resultItem.docs as firebase.default.firestore.QueryDocumentSnapshot<PostProps>[];
-      this.setState({ posts: [...this.state.posts, ...arr] });
-    });
+      let docs = result.docs as firebase.default.firestore.QueryDocumentSnapshot<PostProps>[];
+      this.setState({ posts: docs });
+      let result_two = await db.doc(user?.uid).collection("contacts").get();
+      let docs_two = result_two.docs as firebase.default.firestore.QueryDocumentSnapshot<RoomProps>[];
+      docs_two.forEach(async (item) => {
+        let resultItem = await db
+          .doc(item.data().userUID)
+          .collection("posts")
+          .orderBy("time", "desc")
+          .limit(5)
+          .get();
+        let arr = resultItem.docs as firebase.default.firestore.QueryDocumentSnapshot<PostProps>[];
+        this.setState({ posts: [...this.state.posts, ...arr] });
+      });
+    } else {
+    }
     this.setState({ loading: false });
   };
 
   sortPosts = () => {
-    this.state.posts.sort((itemFirst, itemSecond) => {
-      return -(
-        itemFirst.data().time.toMillis() - itemSecond.data().time.toMillis()
-      );
+    this.setState({
+      posts: this.state.posts.sort((itemFirst, itemSecond) => {
+        return (
+          itemFirst.data().time.toMillis() - itemSecond.data().time.toMillis()
+        );
+      }),
     });
   };
 
@@ -104,6 +118,29 @@ class Home extends React.Component<any, state> {
       this.setState({ menuVisible: false });
     };
 
+    const styles = StyleSheet.create({
+      mainView: {
+        flex: 1,
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      hello: {
+        fontSize: 32,
+        color: colors.primary,
+        fontWeight: "bold",
+      },
+      there: {
+        fontSize: 32,
+        color: colors.accent,
+        fontWeight: "bold",
+      },
+      message: {
+        fontSize: 18,
+        color: colors.text,
+        marginVertical: 24,
+      },
+    });
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Header
@@ -146,27 +183,47 @@ class Home extends React.Component<any, state> {
             </View>
           }
         />
-        <FlatList
-          data={this.state.posts}
-          renderItem={({ item }) => <Post {...item.data()} key={item.id} />}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.loading}
-              onRefresh={this.loadPosts}
-              progressBackgroundColor={colors.surface}
-              colors={[colors.accent]}
-            />
-          }
-          ItemSeparatorComponent={() => (
+        {firebase.default.auth().currentUser ? (
+          <FlatList
+            data={this.state.posts}
+            renderItem={({ item }) => <Post {...item.data()} key={item.id} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.loading}
+                onRefresh={this.loadPosts}
+                progressBackgroundColor={colors.surface}
+                colors={[colors.accent]}
+              />
+            }
+            ItemSeparatorComponent={() => (
+              <View
+                style={{
+                  height: 0.25,
+                  backgroundColor: colors.accent,
+                  width: "90%",
+                  alignSelf: "center",
+                }}></View>
+            )}
+          />
+        ) : (
+          <View style={styles.mainView}>
             <View
               style={{
-                height: 0.25,
-                backgroundColor: colors.accent,
-                width: "90%",
-                alignSelf: "center",
-              }}></View>
-          )}
-        />
+                flexDirection: "row",
+                alignItems: "center",
+              }}>
+              <Text style={styles.hello}>Hello </Text>
+              <Text style={styles.there}>There</Text>
+            </View>
+            <Button
+              mode="full"
+              onPress={openLoginWindow}
+              text="Sign in"
+              icon="chevron-right"
+              style={{ marginTop: 24 }}
+            />
+          </View>
+        )}
       </SafeAreaView>
     );
   }

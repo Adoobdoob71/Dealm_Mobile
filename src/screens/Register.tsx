@@ -77,6 +77,7 @@ function Register() {
     fab: {
       marginLeft: -21,
       alignSelf: "flex-end",
+      backgroundColor: colors.primary,
     },
     imageView: {
       flexDirection: "row",
@@ -150,6 +151,7 @@ function Register() {
             userUID: user?.uid,
             backgroundPicture: "",
             description: "Default Description",
+            createdOn: firebase.default.firestore.Timestamp.now(),
           };
           await db.doc(user?.uid).set(newUser);
           setMessage("Successfully registered! 🎉");

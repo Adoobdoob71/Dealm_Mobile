@@ -37,7 +37,9 @@ function Button(props: ButtonProps) {
             ? colors.disabled
             : "transparent"
           : props.mode === "full"
-          ? colors.primary
+          ? props.color
+            ? props.color
+            : colors.primary
           : "transparent",
       borderRadius: 6,
       borderWidth: props.mode === "bordered" ? 1 : undefined,
@@ -48,8 +50,8 @@ function Button(props: ButtonProps) {
             : colors.primary
           : undefined,
       flexDirection: "row",
-      paddingHorizontal: 12,
-      paddingVertical: 10,
+      paddingHorizontal: 8,
+      paddingVertical: 6,
       alignItems: "center",
     },
     left: {

@@ -9,6 +9,7 @@ import {
   Dimensions,
   InteractionManager,
   TouchableWithoutFeedback,
+  TouchableHighlight,
 } from "react-native";
 import { IconButton, useTheme } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
@@ -35,10 +36,10 @@ function Post(props: PostProps) {
       width: 48,
       height: 48,
       borderRadius: 24,
-      marginRight: 12,
     },
     userDetailsView: {
       flex: 1,
+      marginLeft: 12,
     },
     nickname: {
       fontSize: 16,
@@ -112,14 +113,18 @@ function Post(props: PostProps) {
 
   const openPostWindow = () => navigation.navigate("PostScreen", { ...props });
 
+  const openProfileScreen = () =>
+    navigation.navigate("ProfileScreen", { ...props });
   return (
     <TouchableWithoutFeedback onPress={openPostWindow}>
       <View style={styles.mainView}>
         <View style={styles.top}>
-          <Image
-            source={{ uri: props.profilePicture }}
-            style={styles.profilePicture}
-          />
+          <TouchableOpacity onPress={openProfileScreen}>
+            <Image
+              source={{ uri: props.profilePicture }}
+              style={styles.profilePicture}
+            />
+          </TouchableOpacity>
           <View style={styles.userDetailsView}>
             <Text style={styles.nickname}>{props.nickname}</Text>
             <Text style={styles.timestamp}>{timestamp()}</Text>

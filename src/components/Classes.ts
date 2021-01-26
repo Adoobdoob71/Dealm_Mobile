@@ -10,6 +10,7 @@ interface User {
   private_messages?: Map<String, PrivateRoom>;
   backgroundPicture: string;
   description?: string;
+  createdOn?: firebase.default.firestore.Timestamp
 }
 
 interface PrivateRoom {
