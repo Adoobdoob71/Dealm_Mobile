@@ -7,7 +7,7 @@ interface UserStatusProps {
   nickname: string;
   status: boolean;
   userUID: string;
-  onPress: () => void;
+  onPress?: () => void;
 }
 
 function UserStatus({ nickname, status, userUID, onPress }: UserStatusProps) {
@@ -38,15 +38,15 @@ function UserStatus({ nickname, status, userUID, onPress }: UserStatusProps) {
     },
   });
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
-      <View style={styles.body}>
-        <Text style={styles.nickname}>{nickname}</Text>
-        <View style={styles.status}>
-          <Text style={styles.statusText}>{status ? "Online" : "Offline"}</Text>
-          <View style={styles.badge}></View>
-        </View>
+    <View style={styles.body}>
+      <Text style={styles.nickname} onLongPress={onPress}>
+        {nickname}
+      </Text>
+      <View style={styles.status}>
+        <Text style={styles.statusText}>{status ? "Online" : "Offline"}</Text>
+        <View style={styles.badge}></View>
       </View>
-    </TouchableWithoutFeedback>
+    </View>
   );
 }
 
