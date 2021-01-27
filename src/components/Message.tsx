@@ -10,6 +10,7 @@ function Message(props: MessageProps) {
   const { colors } = useTheme();
   const { isThemeDark } = React.useContext(PreferencesContext);
   const activeColor = isThemeDark ? colors.primary : colors.text;
+  const replyBool = props.replyData !== undefined;
   const styles = StyleSheet.create({
     mainView: {
       flexDirection: "row",
@@ -40,10 +41,10 @@ function Message(props: MessageProps) {
     specialDataView: {
       flexDirection: "row",
       alignItems: "center",
-      marginTop: 8,
-      backgroundColor: `${colors.placeholder}22`,
+      backgroundColor: `${colors.placeholder}20`,
       borderRadius: 10,
-      marginHorizontal: 10,
+      marginLeft: 52,
+      marginRight: 10,
       paddingHorizontal: 10,
       paddingVertical: 6,
     },
@@ -86,7 +87,22 @@ function Message(props: MessageProps) {
     return (differenceInSecs / 86400).toFixed(0) + " days ago";
   };
   return (
-    <View>
+    <View
+      style={{
+        // backgroundColor: replyBool ? `${colors.placeholder}10` : "transparent",
+        padding: replyBool ? 4 : 0,
+      }}>
+      <View style={styles.mainView}>
+        <Image
+          source={{ uri: props.profilePicture }}
+          style={styles.profilePicture}
+        />
+        <View style={styles.bodyView}>
+          <Text style={styles.nickname}>{props.nickname}</Text>
+          <Text style={styles.body}>{props.text}</Text>
+        </View>
+        <Text style={styles.time}>{timestamp()}</Text>
+      </View>
       {props.replyData !== undefined && (
         <View style={styles.specialDataView}>
           <Image
@@ -109,17 +125,6 @@ function Message(props: MessageProps) {
           </View>
         </View>
       )}
-      <View style={styles.mainView}>
-        <Image
-          source={{ uri: props.profilePicture }}
-          style={styles.profilePicture}
-        />
-        <View style={styles.bodyView}>
-          <Text style={styles.nickname}>{props.nickname}</Text>
-          <Text style={styles.body}>{props.text}</Text>
-        </View>
-        <Text style={styles.time}>{timestamp()}</Text>
-      </View>
     </View>
   );
 }

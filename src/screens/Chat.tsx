@@ -40,6 +40,10 @@ interface props {
   roomID: string;
 }
 class Chat extends React.Component<any, state> {
+  flatList:
+    | FlatList<firebase.default.firestore.QueryDocumentSnapshot<MessageProps>>
+    | null
+    | undefined;
   constructor(props: any) {
     super(props);
     this.state = {
@@ -67,7 +71,7 @@ class Chat extends React.Component<any, state> {
       .onSnapshot((snapshot) => {
         let msgs = snapshot.docs as firebase.default.firestore.QueryDocumentSnapshot<MessageProps>[];
         this.setState({ messages: msgs });
-        // flatListRef.current.scrollToEnd({ animated: true });
+        this.flatList?.scrollToEnd({ animated: true });
       });
   };
 
@@ -266,6 +270,7 @@ class Chat extends React.Component<any, state> {
         />
         <FlatList
           data={this.state.messages}
+          ref={(ref) => (this.flatList = ref)}
           style={{ height: 0, width: "100%" }}
           renderItem={({ item }) => <Message {...item.data()} />}
         />
