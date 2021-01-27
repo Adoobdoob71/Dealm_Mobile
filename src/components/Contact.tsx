@@ -9,12 +9,13 @@ import {
 import { PreferencesContext } from "../../Theming";
 import * as firebase from "firebase";
 import { ContactProps } from "./Classes";
+import { useNavigation } from "@react-navigation/native";
 
 function Contact(props: ContactProps) {
   const { colors } = useTheme();
   const { toggleTheme, isThemeDark } = React.useContext(PreferencesContext);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
-
+  const navigation = useNavigation();
   const styles = StyleSheet.create({
     contactView: {
       flexDirection: "row",
@@ -47,9 +48,13 @@ function Contact(props: ContactProps) {
 
   const openMenu = () => setMenuOpen(true);
   const dismissMenu = () => setMenuOpen(false);
+  const openProfile = () => navigation.navigate("ProfileScreen", { ...props });
   return (
     <>
-      <TouchableRipple onPress={props.onPress} rippleColor={colors.primary}>
+      <TouchableRipple
+        onPress={props.onPress}
+        rippleColor={colors.primary}
+        onLongPress={openProfile}>
         <View style={styles.contactView}>
           <Image
             source={{ uri: props.profilePicture }}

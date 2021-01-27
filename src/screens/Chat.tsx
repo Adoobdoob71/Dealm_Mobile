@@ -228,6 +228,7 @@ class Chat extends React.Component<any, state> {
       },
     });
 
+    const navigation = this.props.navigation;
     const onChangeTextMessage = (value: string) =>
       this.setState({ textMessage: value });
 
@@ -236,6 +237,10 @@ class Chat extends React.Component<any, state> {
     };
 
     const closeReply = () => this.setState({ replyPrivately: false });
+
+    const openProfile = () =>
+      navigation.navigate("ProfileScreen", { ...this.props.route.params });
+
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Header
@@ -244,6 +249,7 @@ class Chat extends React.Component<any, state> {
               nickname={this.props.route.params.nickname}
               status={this.state.online}
               userUID={this.props.route.params.userUID}
+              onPress={openProfile}
             />
           }
           left={

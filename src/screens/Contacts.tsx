@@ -110,12 +110,6 @@ class Contacts extends React.Component<any, state> {
 
     const right = (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <IconButton
-          icon="magnify"
-          onPress={openSearchScreen}
-          color={activeColor}
-          size={21}
-        />
         {Platform.OS === "web" && (
           <IconButton
             icon="refresh"
@@ -124,6 +118,12 @@ class Contacts extends React.Component<any, state> {
             size={21}
           />
         )}
+        <IconButton
+          icon="magnify"
+          onPress={openSearchScreen}
+          color={activeColor}
+          size={21}
+        />
       </View>
     );
     const seperator = () => <View style={styles.seperator}></View>;

@@ -1,14 +1,16 @@
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Badge, useTheme } from "react-native-paper";
 
 interface UserStatusProps {
   nickname: string;
   status: boolean;
   userUID: string;
+  onPress: () => void;
 }
 
-function UserStatus({ nickname, status, userUID }: UserStatusProps) {
+function UserStatus({ nickname, status, userUID, onPress }: UserStatusProps) {
   const { colors } = useTheme();
   const styles = StyleSheet.create({
     body: {
@@ -36,13 +38,15 @@ function UserStatus({ nickname, status, userUID }: UserStatusProps) {
     },
   });
   return (
-    <View style={styles.body}>
-      <Text style={styles.nickname}>{nickname}</Text>
-      <View style={styles.status}>
-        <Text style={styles.statusText}>{status ? "Online" : "Offline"}</Text>
-        <View style={styles.badge}></View>
+    <TouchableWithoutFeedback onPress={onPress}>
+      <View style={styles.body}>
+        <Text style={styles.nickname}>{nickname}</Text>
+        <View style={styles.status}>
+          <Text style={styles.statusText}>{status ? "Online" : "Offline"}</Text>
+          <View style={styles.badge}></View>
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
