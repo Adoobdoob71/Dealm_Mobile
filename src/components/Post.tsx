@@ -74,7 +74,10 @@ function Post(props: PostProps) {
   });
 
   const openImage = () =>
-    navigation.navigate("ImageScreen", { imageUrl: props.imageUrl });
+    navigation.navigate("ImageScreen", {
+      imageUrl: props.imageUrl,
+      title: props.title,
+    });
 
   const replyPrivately = () => {
     InteractionManager.runAfterInteractions(() => {

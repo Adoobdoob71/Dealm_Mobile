@@ -144,7 +144,7 @@ class Home extends React.Component<any, state> {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Header
-          title="Home"
+          title="Dealm"
           right={
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               {Platform.OS === "web" && (
@@ -164,10 +164,16 @@ class Home extends React.Component<any, state> {
                     size={21}
                   />
                 }
-                contentStyle={{ backgroundColor: colors.surface }}
+                contentStyle={{
+                  backgroundColor: colors.surface,
+                  borderWidth: 0.25,
+                  borderColor: colors.accent,
+                }}
                 visible={this.state.menuVisible}
                 onDismiss={closeMenu}>
-                <Menu.Item title="Register" onPress={openRegisterWindow} />
+                {firebase.default.auth().currentUser === null && (
+                  <Menu.Item title="Register" onPress={openRegisterWindow} />
+                )}
                 <Menu.Item
                   title={
                     firebase.default.auth().currentUser ? "Logout" : "Login"
@@ -195,6 +201,7 @@ class Home extends React.Component<any, state> {
                 colors={[colors.accent]}
               />
             }
+            refreshing={this.state.loading}
             ItemSeparatorComponent={() => (
               <View
                 style={{

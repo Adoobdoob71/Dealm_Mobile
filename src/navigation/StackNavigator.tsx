@@ -10,6 +10,7 @@ import { Search } from "../screens/Search";
 import PostScreen from "../screens/PostScreen";
 import CreateComment from "../screens/CreateComment";
 import Profile from "../screens/Profile";
+import ImageScreen from "../screens/ImageScreen";
 
 const Stack = createStackNavigator();
 
@@ -64,6 +65,11 @@ function StackNavigator() {
       <Stack.Screen
         name="ProfileScreen"
         component={Profile}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ImageScreen"
+        component={ImageScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

@@ -114,7 +114,10 @@ function CreatePost() {
           imageUrl: downloadUrl,
           postID: result.id,
         });
-      }
+      } else
+        await db.doc(user?.uid).collection("posts").doc(result.id).update({
+          postID: result.id,
+        });
       setMessage("Successfully posted! 🎉");
       setSubmitting(false);
       setTimeout(() => {
@@ -184,7 +187,10 @@ function CreatePost() {
               onChangeText={(value) => setBody(value)}
             />
           </View>
-          <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+          <Image
+            source={{ uri: imageUri ? imageUri : "" }}
+            style={styles.imagePreview}
+          />
         </ScrollView>
       </SafeAreaView>
       {message && <Alert message={message} action={true} />}
