@@ -119,7 +119,7 @@ class Profile extends React.Component<any, state> {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Header
-          title="You"
+          title={this.state.userDetails?.nickname}
           left={
             this.props.route.params.bottomNavigator ? undefined : (
               <IconButton icon="close" color={activeColor} onPress={goBack} />

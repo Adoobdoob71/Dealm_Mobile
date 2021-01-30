@@ -166,8 +166,8 @@ class Home extends React.Component<any, state> {
                 }
                 contentStyle={{
                   backgroundColor: colors.surface,
-                  borderWidth: 0.25,
-                  borderColor: colors.accent,
+                  // borderWidth: 0.25,
+                  // borderColor: colors.accent,
                 }}
                 visible={this.state.menuVisible}
                 onDismiss={closeMenu}>

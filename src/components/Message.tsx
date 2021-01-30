@@ -89,7 +89,6 @@ function Message(props: MessageProps) {
   return (
     <View
       style={{
-        // backgroundColor: replyBool ? `${colors.placeholder}10` : "transparent",
         padding: replyBool ? 4 : 0,
       }}>
       <View style={styles.mainView}>

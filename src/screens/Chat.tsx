@@ -5,6 +5,7 @@ import {
   FlatListProps,
   Image,
   ImageBackground,
+  InteractionManager,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -22,7 +23,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as firebase from "firebase";
 
 interface state {
-  messages: firebase.default.firestore.QueryDocumentSnapshot<MessageProps>[];
+  messages: MessageProps[];
   imageBlob: Blob | null;
   imageUri: string;
   message: string | null;
@@ -68,10 +69,14 @@ class Chat extends React.Component<any, state> {
       .doc(this.props.route.params.roomID)
       .collection("messages")
       .orderBy("time", "asc")
+      .limitToLast(10)
       .onSnapshot((snapshot) => {
-        let msgs = snapshot.docs as firebase.default.firestore.QueryDocumentSnapshot<MessageProps>[];
-        this.setState({ messages: msgs });
-        this.flatList?.scrollToEnd({ animated: true });
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            let item = change.doc.data() as MessageProps;
+            this.setState({ messages: [...this.state.messages, item] });
+          }
+        });
       });
   };
 
@@ -127,51 +132,56 @@ class Chat extends React.Component<any, state> {
     }
   };
 
-  sendText = async () => {
-    if (
-      this.state.textMessage.trim().length == 0 ||
-      this.state.userDetails === null
-    ) {
-      Alert.alert("something's wrong");
-      return;
-    }
-    this.setState({ submitting: true });
-    let newMessage: MessageProps;
-    if (this.state.replyPrivately) {
-      let reply: ReplyProps = {
-        body: this.props.route.params.body,
-        time: this.props.route.params.time,
-        title: this.props.route.params.title,
-        imageUrl: this.props.route.params.imageUrl,
-      };
-      newMessage = {
-        nickname: this.state.userDetails?.nickname,
-        profilePicture: this.state.userDetails?.profilePicture,
-        text: this.state.textMessage.trim(),
-        time: firebase.default.firestore.Timestamp.now(),
-        userUID: this.state.userDetails?.userUID,
-        replyData: reply,
-      };
-    } else {
-      newMessage = {
-        nickname: this.state.userDetails?.nickname,
-        profilePicture: this.state.userDetails?.profilePicture,
-        text: this.state.textMessage.trim(),
-        time: firebase.default.firestore.Timestamp.now(),
-        userUID: this.state.userDetails?.userUID,
-      };
-    }
-    await firebase.default
-      .firestore()
-      .collection("rooms")
-      .doc(this.props.route.params.roomID)
-      .collection("messages")
-      .add(newMessage);
+  sendText = () => {
+    InteractionManager.runAfterInteractions(async () => {
+      if (
+        this.state.textMessage.trim().length == 0 ||
+        this.state.userDetails === null
+      ) {
+        Alert.alert("something's wrong");
+        return;
+      }
+      this.setState({ submitting: true });
+      let newMessage: MessageProps;
 
-    this.setState({
-      textMessage: "",
-      submitting: false,
-      replyPrivately: false,
+      let db = firebase.default
+        .firestore()
+        .collection("rooms")
+        .doc(this.props.route.params.roomID)
+        .collection("messages");
+      if (this.state.replyPrivately) {
+        let reply: ReplyProps = {
+          body: this.props.route.params.body,
+          time: this.props.route.params.time,
+          title: this.props.route.params.title,
+          imageUrl: this.props.route.params.imageUrl,
+        };
+        newMessage = {
+          nickname: this.state.userDetails?.nickname,
+          profilePicture: this.state.userDetails?.profilePicture,
+          text: this.state.textMessage.trim(),
+          time: firebase.default.firestore.Timestamp.now(),
+          userUID: this.state.userDetails?.userUID,
+          replyData: reply,
+        };
+      } else {
+        newMessage = {
+          nickname: this.state.userDetails?.nickname,
+          profilePicture: this.state.userDetails?.profilePicture,
+          text: this.state.textMessage.trim(),
+          time: firebase.default.firestore.Timestamp.now(),
+          userUID: this.state.userDetails?.userUID,
+        };
+      }
+
+      await db.add(newMessage);
+
+      this.setState({
+        textMessage: "",
+        submitting: false,
+        replyPrivately: false,
+      });
+      this.flatList?.scrollToEnd({ animated: true });
     });
   };
 
@@ -272,7 +282,7 @@ class Chat extends React.Component<any, state> {
           data={this.state.messages}
           ref={(ref) => (this.flatList = ref)}
           style={{ height: 0, width: "100%" }}
-          renderItem={({ item }) => <Message {...item.data()} />}
+          renderItem={({ item }) => <Message {...item} />}
         />
         <View style={styles.chatBox}>
           {this.props.route.params.postID != undefined &&

@@ -12,7 +12,7 @@ import { PreferencesContext } from "../../Theming";
 import { useNavigation } from "@react-navigation/native";
 
 interface BackButtonProps {
-  imageUrl: string;
+  imageUrl?: string;
 }
 function BackButton({ imageUrl }: BackButtonProps) {
   const { isThemeDark } = React.useContext(PreferencesContext);
@@ -25,6 +25,7 @@ function BackButton({ imageUrl }: BackButtonProps) {
       flexDirection: "row",
       padding: 2,
       alignItems: "center",
+      justifyContent: imageUrl ? undefined : "center",
     },
     image: {
       width: 32,
@@ -34,8 +35,8 @@ function BackButton({ imageUrl }: BackButtonProps) {
     },
     barrier: {
       borderRadius: 24,
-      width: 68,
-      height: 40,
+      width: imageUrl ? 68 : 40,
+      height: imageUrl ? 40 : 40,
       overflow: "hidden",
       justifyContent: "center",
     },
@@ -61,7 +62,9 @@ function BackButton({ imageUrl }: BackButtonProps) {
             size={24}
             color={activeColor}
           />
-          <Image source={{ uri: imageUrl }} style={styles.image} />
+          {imageUrl && (
+            <Image source={{ uri: imageUrl }} style={styles.image} />
+          )}
         </View>
       </TouchableRipple>
     </View>

@@ -128,7 +128,7 @@ function Login() {
                 <TextInput
                   keyboardType="email-address"
                   placeholder="Email"
-                  style={{ color: colors.text, flex: 1, fontSize: 14 }}
+                  style={{ color: "#FFF", flex: 1, fontSize: 14 }}
                   placeholderTextColor={colors.placeholder}
                   value={email}
                   onChangeText={(value) => setEmail(value)}
@@ -139,7 +139,7 @@ function Login() {
                 <TextInput
                   placeholder="Password"
                   secureTextEntry={showPassword === false}
-                  style={{ color: colors.text, flex: 1, fontSize: 14 }}
+                  style={{ color: "#FFF", flex: 1, fontSize: 14 }}
                   placeholderTextColor={colors.placeholder}
                   value={password}
                   onChangeText={(value) => setPassword(value)}

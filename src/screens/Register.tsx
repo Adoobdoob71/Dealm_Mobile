@@ -186,7 +186,7 @@ function Register() {
             }
             style={{ backgroundColor: colors.backdrop }}
           />
-          <ScrollView style={{ flex: 1, backgroundColor: colors.backdrop }}>
+          <ScrollView style={{ backgroundColor: colors.backdrop }}>
             <Text style={styles.title}>Create a new account.</Text>
             <View style={styles.imageView}>
               <Image
@@ -206,7 +206,7 @@ function Register() {
                 <TextInput
                   keyboardType="email-address"
                   placeholder="Email"
-                  style={{ color: colors.text, flex: 1, fontSize: 14 }}
+                  style={{ color: "#FFF", flex: 1, fontSize: 14 }}
                   placeholderTextColor={colors.placeholder}
                   value={email}
                   onChangeText={(value) => setEmail(value)}
@@ -217,7 +217,7 @@ function Register() {
                 <TextInput
                   keyboardType="default"
                   placeholder="Nickname"
-                  style={{ color: colors.text, flex: 1, fontSize: 14 }}
+                  style={{ color: "#FFF", flex: 1, fontSize: 14 }}
                   placeholderTextColor={colors.placeholder}
                   value={nickname}
                   onChangeText={(value) => setNickname(value)}
@@ -228,7 +228,7 @@ function Register() {
                 <TextInput
                   placeholder="Password"
                   secureTextEntry={showPassword}
-                  style={{ color: colors.text, flex: 1, fontSize: 14 }}
+                  style={{ color: "#FFF", flex: 1, fontSize: 14 }}
                   placeholderTextColor={colors.placeholder}
                   value={password}
                   onChangeText={(value) => setPassword(value)}
