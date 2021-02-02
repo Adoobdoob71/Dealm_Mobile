@@ -8,7 +8,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#352247"
+      "backgroundColor": "#ff8e71"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -22,12 +22,12 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#352247"
+        "backgroundColor": "#ff8e71"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "themeColor": "#352247"
+      "themeColor": "#ff8e71"
     },
     "description": "Dealm",
     "githubUrl": "https://github.com/Adoobdoob71/Dealm_Mobile"
