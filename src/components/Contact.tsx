@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import {
+  Checkbox,
   IconButton,
   Menu,
   TouchableRipple,
@@ -11,10 +12,11 @@ import * as firebase from "firebase";
 import { ContactProps } from "./Classes";
 import { useNavigation } from "@react-navigation/native";
 
-function Contact(props: ContactProps) {
+function Contact(
+  props: ContactProps & { shareScreen?: boolean; checkedContact?: boolean }
+) {
   const { colors } = useTheme();
   const { toggleTheme, isThemeDark } = React.useContext(PreferencesContext);
-  const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
   const navigation = useNavigation();
   const styles = StyleSheet.create({
     contactView: {
@@ -26,6 +28,7 @@ function Contact(props: ContactProps) {
       width: 48,
       height: 48,
       borderRadius: 24,
+      marginLeft: 10,
     },
     contactDetails: {
       flexDirection: "column",
@@ -45,10 +48,8 @@ function Contact(props: ContactProps) {
   });
 
   const activeColor = isThemeDark ? colors.primary : colors.text;
-
-  const openMenu = () => setMenuOpen(true);
-  const dismissMenu = () => setMenuOpen(false);
   const openProfile = () => navigation.navigate("ProfileScreen", { ...props });
+
   return (
     <>
       <TouchableRipple
@@ -56,6 +57,12 @@ function Contact(props: ContactProps) {
         rippleColor={colors.primary}
         onLongPress={openProfile}>
         <View style={styles.contactView}>
+          {props.shareScreen && (
+            <Checkbox
+              status={props.checkedContact ? "checked" : "unchecked"}
+              color={activeColor}
+            />
+          )}
           <Image
             source={{ uri: props.profilePicture }}
             style={styles.profilePicture}
@@ -64,30 +71,8 @@ function Contact(props: ContactProps) {
             <Text style={styles.contactNickname}>{props.nickname}</Text>
             <Text style={styles.contactDescription}>{props.description}</Text>
           </View>
-          {/* <Menu
-            anchor={
-              <IconButton
-                icon="chevron-down"
-                color={activeColor}
-                onPress={openMenu}
-                size={18}
-                style={{ alignSelf: "flex-start" }}
-              />
-            }
-            onDismiss={dismissMenu}
-            visible={menuOpen}
-            contentStyle={{
-              backgroundColor: colors.surface,
-              alignSelf: "flex-start",
-            }}>
-            <Menu.Item
-              title={`Follow ${props.nickname}`}
-              disabled={!firebase.default.auth().currentUser}
-            />
-          </Menu> */}
         </View>
       </TouchableRipple>
-      {/* <View style={styles.bar}></View> */}
     </>
   );
 }

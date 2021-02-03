@@ -67,16 +67,6 @@ class Contacts extends React.Component<any, state> {
     });
   }
 
-  sortContacts = () => {
-    InteractionManager.runAfterInteractions(() => {
-      this.setState({
-        contacts: this.state.contacts.sort((itemFirst, itemSecond) => {
-          return -(itemFirst.nickname.length - itemSecond.nickname.length);
-        }),
-      });
-    });
-  };
-
   render() {
     const colors = this.props.theme.colors;
     const { isThemeDark } = this.context;

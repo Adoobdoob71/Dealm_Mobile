@@ -71,6 +71,10 @@ function Post(props: PostProps) {
       borderRadius: 8,
       display: props.imageUrl ? "flex" : "none",
     },
+    bottom: {
+      flexDirection: "row",
+      justifyContent: "flex-end",
+    },
   });
 
   const openImage = () =>
@@ -118,6 +122,8 @@ function Post(props: PostProps) {
 
   const openProfileScreen = () =>
     navigation.navigate("ProfileScreen", { ...props });
+
+  const sharePost = () => navigation.navigate("ShareScreen", { ...props });
   return (
     <TouchableWithoutFeedback onPress={openPostWindow}>
       <View style={styles.mainView}>
@@ -132,6 +138,12 @@ function Post(props: PostProps) {
             <Text style={styles.nickname}>{props.nickname}</Text>
             <Text style={styles.timestamp}>{timestamp()}</Text>
           </View>
+          <IconButton
+            icon="share"
+            color={activeColor}
+            onPress={sharePost}
+            size={16}
+          />
           <IconButton
             icon="send"
             size={16}
@@ -149,6 +161,7 @@ function Post(props: PostProps) {
             <Image source={{ uri: props.imageUrl }} style={styles.postImage} />
           </TouchableOpacity>
         </View>
+        <View style={styles.bottom}></View>
       </View>
     </TouchableWithoutFeedback>
   );
