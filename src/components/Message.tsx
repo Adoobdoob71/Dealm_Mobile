@@ -5,12 +5,15 @@ import { PreferencesContext } from "../../Theming";
 import { ReplyProps } from "./Classes";
 import * as firebase from "firebase";
 import { MessageProps } from "./Classes";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 
 function Message(props: MessageProps) {
   const { colors } = useTheme();
   const { isThemeDark } = React.useContext(PreferencesContext);
   const activeColor = isThemeDark ? colors.primary : colors.text;
   const replyBool = props.replyData !== undefined;
+  const navigation = useNavigation();
   const styles = StyleSheet.create({
     mainView: {
       flexDirection: "row",
@@ -86,6 +89,9 @@ function Message(props: MessageProps) {
 
     return (differenceInSecs / 86400).toFixed(0) + " days ago";
   };
+
+  const openPostWindow = () =>
+    navigation.navigate("PostScreen", { ...props.replyData });
   return (
     <View
       style={{
@@ -103,26 +109,30 @@ function Message(props: MessageProps) {
         <Text style={styles.time}>{timestamp()}</Text>
       </View>
       {props.replyData !== undefined && (
-        <View style={styles.specialDataView}>
-          <Image
-            style={styles.postImage}
-            source={{ uri: props.replyData?.imageUrl }}
-          />
-          <View style={styles.postDetailView}>
-            <Text
-              style={styles.postTitle}
-              numberOfLines={1}
-              ellipsizeMode="tail">
-              {props.replyData?.title}
-            </Text>
-            <Text
-              style={styles.postBody}
-              numberOfLines={1}
-              ellipsizeMode="tail">
-              {props.replyData?.body}
-            </Text>
+        <TouchableWithoutFeedback onPress={openPostWindow}>
+          <View style={styles.specialDataView}>
+            {props.replyData.imageUrl && (
+              <Image
+                style={styles.postImage}
+                source={{ uri: props.replyData?.imageUrl }}
+              />
+            )}
+            <View style={styles.postDetailView}>
+              <Text
+                style={styles.postTitle}
+                numberOfLines={1}
+                ellipsizeMode="tail">
+                {props.replyData?.title}
+              </Text>
+              <Text
+                style={styles.postBody}
+                numberOfLines={1}
+                ellipsizeMode="tail">
+                {props.replyData?.body}
+              </Text>
+            </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       )}
     </View>
   );

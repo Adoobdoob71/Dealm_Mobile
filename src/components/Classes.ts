@@ -42,6 +42,9 @@ interface ReplyProps {
   title: string;
   body: string;
   imageUrl?: string;
+  postID: string;
+  profilePicture?: string;
+  nickname?: string;
   time: firebase.default.firestore.Timestamp;
 }
 
