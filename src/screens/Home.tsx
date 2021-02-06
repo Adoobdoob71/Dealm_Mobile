@@ -51,7 +51,7 @@ class Home extends React.Component<any, state> {
         this.setState({ posts: [] });
       }
     });
-    this.focusListener = this.props.navigation.addListener("focus", () => {
+    this.focusListener = this.props.navigation.addListener("tabPress", () => {
       this.flatList?.scrollToIndex({ index: 0, animated: true });
     });
   }
