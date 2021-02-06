@@ -148,7 +148,7 @@ class Share extends React.Component<any, state> {
         padding: 12,
         borderRadius: 8,
         backgroundColor: colors.surface,
-        height: screenHeight * 0.35,
+        height: screenHeight * 0.45,
         margin: 16,
       },
       messageBoxTitle: {
@@ -191,7 +191,9 @@ class Share extends React.Component<any, state> {
                 size={18}
                 color={activeColor}
                 onPress={openModal}
-                disabled={this.state.sending}
+                disabled={
+                  this.state.sending || this.state.selectedContacts.length === 0
+                }
               />
             }
           />

@@ -36,6 +36,11 @@ class Home extends React.Component<any, state> {
   }
 
   static contextType = PreferencesContext;
+  flatList:
+    | FlatList<firebase.default.firestore.QueryDocumentSnapshot<PostProps>>
+    | null
+    | undefined;
+  focusListener: any;
 
   componentDidMount() {
     firebase.default.auth().onAuthStateChanged(async (user) => {
@@ -46,6 +51,13 @@ class Home extends React.Component<any, state> {
         this.setState({ posts: [] });
       }
     });
+    this.focusListener = this.props.navigation.addListener("focus", () => {
+      this.flatList?.scrollToIndex({ index: 0, animated: true });
+    });
+  }
+
+  componentWillUnmount() {
+    this.focusListener.remove();
   }
 
   loadPosts = async (user?: firebase.default.User | null) => {
@@ -109,15 +121,14 @@ class Home extends React.Component<any, state> {
       this.props.navigation.navigate("Register");
       this.setState({ menuVisible: false });
     };
-    const openLoginWindow = () => {
-      this.props.navigation.navigate("Login");
-      this.setState({ menuVisible: false });
-    };
     const openSettingsWindow = () => {
       this.props.navigation.navigate("Settings");
       this.setState({ menuVisible: false });
     };
-
+    const openLoginWindow = () => {
+      this.props.navigation.navigate("Login");
+      this.setState({ menuVisible: false });
+    };
     const styles = StyleSheet.create({
       mainView: {
         flex: 1,
@@ -174,16 +185,6 @@ class Home extends React.Component<any, state> {
                 {firebase.default.auth().currentUser === null && (
                   <Menu.Item title="Register" onPress={openRegisterWindow} />
                 )}
-                <Menu.Item
-                  title={
-                    firebase.default.auth().currentUser ? "Logout" : "Login"
-                  }
-                  onPress={
-                    firebase.default.auth().currentUser
-                      ? this.updateStatusSignOut
-                      : openLoginWindow
-                  }
-                />
                 <Menu.Item title="Settings" onPress={openSettingsWindow} />
               </Menu>
             </View>
@@ -192,6 +193,7 @@ class Home extends React.Component<any, state> {
         {firebase.default.auth().currentUser ? (
           <FlatList
             data={this.state.posts}
+            ref={(ref) => (this.flatList = ref)}
             renderItem={({ item }) => <Post {...item.data()} key={item.id} />}
             refreshControl={
               <RefreshControl

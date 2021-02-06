@@ -5,6 +5,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { List, useTheme, Switch, IconButton } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
 import { Header } from "../components/Header";
+import * as firebase from "firebase";
 
 function Settings() {
   const { colors } = useTheme();
@@ -33,6 +34,12 @@ function Settings() {
             description="Change account details"
             onPress={() => {}}
             left={() => <List.Icon icon="account" />}
+          />
+          <List.Item
+            title="Logout"
+            description="Logout of your account"
+            onPress={() => firebase.default.auth().signOut()}
+            left={() => <List.Icon icon="delete" color={colors.error} />}
           />
         </List.Section>
         <List.Section>

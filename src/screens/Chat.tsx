@@ -41,10 +41,6 @@ interface props {
   roomID: string;
 }
 class Chat extends React.Component<any, state> {
-  flatList:
-    | FlatList<firebase.default.firestore.QueryDocumentSnapshot<MessageProps>>
-    | null
-    | undefined;
   constructor(props: any) {
     super(props);
     this.state = {
@@ -61,6 +57,10 @@ class Chat extends React.Component<any, state> {
   }
 
   static contextType = PreferencesContext;
+  flatList:
+    | FlatList<firebase.default.firestore.QueryDocumentSnapshot<MessageProps>>
+    | null
+    | undefined;
 
   loadMessages = () => {
     firebase.default
