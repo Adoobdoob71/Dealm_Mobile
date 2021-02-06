@@ -45,22 +45,20 @@ class Home extends React.Component<any, state> {
   componentDidMount() {
     firebase.default.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        this.loadPosts(user);
+        this.loadPosts();
         this.sortPosts();
       } else {
         this.setState({ posts: [] });
       }
     });
     this.focusListener = this.props.navigation.addListener("tabPress", () => {
-      this.flatList?.scrollToIndex({ index: 0, animated: true });
+      if (this.state.posts.length != 0)
+        this.flatList?.scrollToIndex({ index: 0, animated: true });
     });
   }
 
-  componentWillUnmount() {
-    this.focusListener.remove();
-  }
-
-  loadPosts = async (user?: firebase.default.User | null) => {
+  loadPosts = async () => {
+    let user = firebase.default.auth().currentUser;
     this.setState({ loading: true, posts: [] });
     if (user) {
       let db = firebase.default.firestore().collection("users");
@@ -161,7 +159,7 @@ class Home extends React.Component<any, state> {
               {Platform.OS === "web" && (
                 <IconButton
                   icon="refresh"
-                  onPress={() => this.loadPosts()}
+                  onPress={this.loadPosts}
                   size={21}
                   color={activeColor}
                 />

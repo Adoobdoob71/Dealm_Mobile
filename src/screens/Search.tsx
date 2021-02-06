@@ -51,25 +51,38 @@ function Search() {
   };
   const addContact = async (item: ContactProps) => {
     let db = firebase.default.firestore().collection("users");
-    let result = await firebase.default.firestore().collection("rooms").add({
-      default: null,
-    });
-    await db
-      .doc(item.userUID)
-      .collection("contacts")
-      .doc(firebase.default.auth().currentUser?.uid)
-      .set({
-        roomID: result.id,
-        userUID: firebase.default.auth().currentUser?.uid,
-      });
-    await db
+    let check = await db
       .doc(firebase.default.auth().currentUser?.uid)
       .collection("contacts")
       .doc(item.userUID)
-      .set({
-        roomID: result.id,
-        userUID: item.userUID,
+      .get();
+    if (
+      !check.exists &&
+      item.userUID !== firebase.default.auth().currentUser?.uid
+    ) {
+      let result = await firebase.default.firestore().collection("rooms").add({
+        default: null,
       });
+      await db
+        .doc(item.userUID)
+        .collection("contacts")
+        .doc(firebase.default.auth().currentUser?.uid)
+        .set({
+          roomID: result.id,
+          userUID: firebase.default.auth().currentUser?.uid,
+        });
+      await db
+        .doc(firebase.default.auth().currentUser?.uid)
+        .collection("contacts")
+        .doc(item.userUID)
+        .set({
+          roomID: result.id,
+          userUID: item.userUID,
+        });
+    } else {
+      navigation.navigate("ProfileScreen", { ...item });
+      return;
+    }
     navigation.goBack();
   };
   return (

@@ -6,7 +6,7 @@ interface User {
   nickname: string;
   email: string;
   online: boolean;
-  lastOnline: string;
+  lastOnline: firebase.default.firestore.Timestamp;
   private_messages?: Map<String, PrivateRoom>;
   backgroundPicture: string;
   description?: string;

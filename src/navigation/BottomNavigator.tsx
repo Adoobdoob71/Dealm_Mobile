@@ -32,6 +32,7 @@ export default function BottomNavigator() {
     } else {
       firebase.default.firestore().collection("users").doc(user?.uid).update({
         online: false,
+        lastOnline: firebase.default.firestore.Timestamp.now(),
       });
     }
     setAppState(nextAppState);

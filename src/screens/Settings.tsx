@@ -13,6 +13,17 @@ function Settings() {
   const { toggleTheme, isThemeDark } = React.useContext(PreferencesContext);
   const styles = StyleSheet.create({});
   const navigateBack = () => navigation.goBack();
+  const signOut = async () => {
+    await firebase.default
+      .firestore()
+      .collection("users")
+      .doc(firebase.default.auth().currentUser?.uid)
+      .update({
+        online: false,
+        lastOnline: firebase.default.firestore.Timestamp.now(),
+      });
+    firebase.default.auth().signOut();
+  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Header
@@ -38,7 +49,7 @@ function Settings() {
           <List.Item
             title="Logout"
             description="Logout of your account"
-            onPress={() => firebase.default.auth().signOut()}
+            onPress={signOut}
             left={() => <List.Icon icon="delete" color={colors.error} />}
           />
         </List.Section>

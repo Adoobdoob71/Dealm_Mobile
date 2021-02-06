@@ -102,7 +102,7 @@ function Post(props: PostProps) {
     });
   };
 
-  const timestamp = (): string => {
+  const timestamp = () => {
     let differenceInMins =
       (firebase.default.firestore.Timestamp.now().toMillis() -
         props.time.toMillis()) /

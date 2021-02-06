@@ -168,7 +168,9 @@ class Profile extends React.Component<any, state> {
                     />
                     <ProfileDetailView
                       title="Created on"
-                      amount={this.state.userDetails?.createdOn}
+                      amount={this.state.userDetails?.createdOn
+                        ?.toDate()
+                        .toDateString()}
                     />
                   </View>
                 </View>

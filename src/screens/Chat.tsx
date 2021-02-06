@@ -31,6 +31,7 @@ interface state {
   submitting: boolean;
   userDetails: User | null;
   online: boolean;
+  lastOnline: firebase.default.firestore.Timestamp | null;
   replyPrivately: boolean;
 }
 
@@ -53,6 +54,7 @@ class Chat extends React.Component<any, state> {
       userDetails: null,
       online: false,
       replyPrivately: this.props.route.params.postID !== undefined,
+      lastOnline: null,
     };
   }
 
@@ -111,7 +113,7 @@ class Chat extends React.Component<any, state> {
       .doc(this.props.route.params.userUID)
       .onSnapshot((result) => {
         let user = result.data() as User;
-        this.setState({ online: user.online });
+        this.setState({ online: user.online, lastOnline: user.lastOnline });
       });
   };
 
@@ -155,6 +157,7 @@ class Chat extends React.Component<any, state> {
           time: this.props.route.params.time,
           title: this.props.route.params.title,
           imageUrl: this.props.route.params.imageUrl,
+          postID: this.props.route.params.postID,
         };
         newMessage = {
           nickname: this.state.userDetails?.nickname,
@@ -255,6 +258,22 @@ class Chat extends React.Component<any, state> {
     const openProfile = () =>
       navigation.navigate("ProfileScreen", { ...this.props.route.params });
 
+    const lastOnline = () => {
+      let differenceInMins =
+        (firebase.default.firestore.Timestamp.now().toMillis() -
+          this.state.lastOnline?.toMillis()) /
+        60000;
+      let smallerThan60 = differenceInMins < 60;
+      let smallerThan1440 = differenceInMins < 1440;
+
+      if (smallerThan60) return differenceInMins.toFixed(0) + " mins ago";
+
+      if (smallerThan1440)
+        return (differenceInMins / 60).toFixed(0) + " hours ago";
+
+      return (differenceInMins / 1440).toFixed(0) + " days ago";
+    };
+
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Header
@@ -262,6 +281,7 @@ class Chat extends React.Component<any, state> {
             <UserStatus
               nickname={this.props.route.params.nickname}
               status={this.state.online}
+              lastOnline={lastOnline()}
               userUID={this.props.route.params.userUID}
               onPress={openProfile}
             />

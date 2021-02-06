@@ -48,7 +48,7 @@ function Comment(props: CommentProps) {
     },
   });
 
-  const timestamp = (): string => {
+  const timestamp = () => {
     let differenceInMins =
       (firebase.default.firestore.Timestamp.now().toMillis() -
         props.time.toMillis()) /

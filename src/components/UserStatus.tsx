@@ -7,10 +7,17 @@ interface UserStatusProps {
   nickname: string;
   status: boolean;
   userUID: string;
+  lastOnline: string;
   onPress?: () => void;
 }
 
-function UserStatus({ nickname, status, userUID, onPress }: UserStatusProps) {
+function UserStatus({
+  nickname,
+  status,
+  userUID,
+  lastOnline,
+  onPress,
+}: UserStatusProps) {
   const { colors } = useTheme();
   const styles = StyleSheet.create({
     body: {
@@ -43,7 +50,9 @@ function UserStatus({ nickname, status, userUID, onPress }: UserStatusProps) {
         {nickname}
       </Text>
       <View style={styles.status}>
-        <Text style={styles.statusText}>{status ? "Online" : "Offline"}</Text>
+        <Text style={styles.statusText}>
+          {status ? "Online" : `Last seen ${lastOnline}`}
+        </Text>
         <View style={styles.badge}></View>
       </View>
     </View>
