@@ -77,6 +77,7 @@ class CreateComment extends React.Component<any, state> {
     const activeColor = isThemeDark ? colors.primary : colors.text;
     const updateCommentText = (value: string) =>
       this.setState({ commentText: value });
+    const dismissAlert = () => this.setState({ message: null });
     const styles = StyleSheet.create({
       mainView: {
         flex: 1,
@@ -91,36 +92,37 @@ class CreateComment extends React.Component<any, state> {
       },
     });
     return (
-      <>
-        <SafeAreaView style={styles.mainView}>
-          <Header
-            left={<BackButton imageUrl={this.props.route.params.imageUrl} />}
-            title={this.props.route.params.title}
-            right={
-              <IconButton
-                icon="send"
-                size={21}
-                color={activeColor}
-                onPress={this.submitComment}
-                disabled={
-                  this.state.commentText.trim().length === 0 ||
-                  this.state.loading
-                }
-              />
-            }
-          />
-          <TextInput
-            value={this.state.commentText}
-            onChangeText={updateCommentText}
-            style={styles.commentText}
-            placeholder="Say something..."
-            placeholderTextColor={colors.placeholder}
-          />
-        </SafeAreaView>
+      <SafeAreaView style={styles.mainView}>
+        <Header
+          left={<BackButton imageUrl={this.props.route.params.imageUrl} />}
+          title={this.props.route.params.title}
+          right={
+            <IconButton
+              icon="send"
+              size={21}
+              color={activeColor}
+              onPress={this.submitComment}
+              disabled={
+                this.state.commentText.trim().length === 0 || this.state.loading
+              }
+            />
+          }
+        />
+        <TextInput
+          value={this.state.commentText}
+          onChangeText={updateCommentText}
+          style={styles.commentText}
+          placeholder="Say something..."
+          placeholderTextColor={colors.placeholder}
+        />
         {this.state.message && (
-          <Alert message={this.state.message} action={true} />
+          <Alert
+            message={this.state.message}
+            action={true}
+            onPress={dismissAlert}
+          />
         )}
-      </>
+      </SafeAreaView>
     );
   }
 }

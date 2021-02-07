@@ -103,21 +103,32 @@ function CreatePost() {
         time: firebase.default.firestore.Timestamp.now(),
         userUID: user?.uid,
       };
-      let result = await db.doc(user?.uid).collection("posts").add(newPost);
+      let result = await firebase.default
+        .firestore()
+        .collection("posts")
+        .add(newPost);
       if (imageBlob) {
         let storageRef = firebase.default
           .storage()
           .ref("images/users/posts/" + result.id);
         await storageRef.put(imageBlob);
         let downloadUrl = await storageRef.getDownloadURL();
-        await db.doc(user?.uid).collection("posts").doc(result.id).update({
-          imageUrl: downloadUrl,
-          postID: result.id,
-        });
+        await firebase.default
+          .firestore()
+          .collection("posts")
+          .doc(result.id)
+          .update({
+            imageUrl: downloadUrl,
+            postID: result.id,
+          });
       } else
-        await db.doc(user?.uid).collection("posts").doc(result.id).update({
-          postID: result.id,
-        });
+        await firebase.default
+          .firestore()
+          .collection("posts")
+          .doc(result.id)
+          .update({
+            postID: result.id,
+          });
       setMessage("Successfully posted! 🎉");
       setSubmitting(false);
       setTimeout(() => {
@@ -131,70 +142,67 @@ function CreatePost() {
 
   const goBack = () => navigation.goBack();
   const goToPreview = () => navigation.navigate("PreviewScreen");
+  const dismissAlert = () => setMessage(null);
   return (
-    <>
-      <SafeAreaView style={styles.mainBody}>
-        <Header
-          left={
-            <IconButton
-              icon="arrow-left"
-              color={activeColor}
-              onPress={goBack}
-            />
-          }
-          title="Create a post"
-          right={
-            <View style={styles.headerButtonsView}>
-              {/* <Button
+    <SafeAreaView style={styles.mainBody}>
+      <Header
+        left={
+          <IconButton icon="arrow-left" color={activeColor} onPress={goBack} />
+        }
+        title="Create a post"
+        right={
+          <View style={styles.headerButtonsView}>
+            {/* <Button
                 mode="text"
                 fontSize={10}
                 text="Preview"
                 onPress={goToPreview}
               /> */}
-              <IconButton
-                icon="image"
-                onPress={pickImage}
-                color={activeColor}
-                disabled={submitting}
-                size={18}
-              />
-              <IconButton
-                icon="plus"
-                onPress={submitPost}
-                color={activeColor}
-                disabled={submitting}
-                size={18}
-              />
-            </View>
-          }
-        />
-        <ScrollView style={{ flex: 1 }}>
-          <View style={{ flex: 1, padding: 10 }}>
-            <TextInput
-              value={title}
-              style={styles.title}
-              placeholderTextColor={colors.placeholder}
-              placeholder="Title"
-              multiline={false}
-              onChangeText={(value) => setTitle(value)}
+            <IconButton
+              icon="image"
+              onPress={pickImage}
+              color={activeColor}
+              disabled={submitting}
+              size={18}
             />
-            <TextInput
-              value={body}
-              style={styles.body}
-              placeholderTextColor={colors.placeholder}
-              placeholder="Body"
-              multiline={true}
-              onChangeText={(value) => setBody(value)}
+            <IconButton
+              icon="plus"
+              onPress={submitPost}
+              color={activeColor}
+              disabled={submitting}
+              size={18}
             />
           </View>
-          <Image
-            source={{ uri: imageUri ? imageUri : "" }}
-            style={styles.imagePreview}
+        }
+      />
+      <ScrollView style={{ flex: 1 }}>
+        <View style={{ flex: 1, padding: 10 }}>
+          <TextInput
+            value={title}
+            style={styles.title}
+            placeholderTextColor={colors.placeholder}
+            placeholder="Title"
+            multiline={false}
+            onChangeText={(value) => setTitle(value)}
           />
-        </ScrollView>
-      </SafeAreaView>
-      {message && <Alert message={message} action={true} />}
-    </>
+          <TextInput
+            value={body}
+            style={styles.body}
+            placeholderTextColor={colors.placeholder}
+            placeholder="Body"
+            multiline={true}
+            onChangeText={(value) => setBody(value)}
+          />
+        </View>
+        <Image
+          source={{ uri: imageUri ? imageUri : "" }}
+          style={styles.imagePreview}
+        />
+      </ScrollView>
+      {message && (
+        <Alert message={message} action={true} onPress={dismissAlert} />
+      )}
+    </SafeAreaView>
   );
 }
 

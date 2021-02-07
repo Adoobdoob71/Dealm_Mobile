@@ -29,7 +29,7 @@ function Login() {
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
-  const [message, setMessage] = React.useState<any>(null);
+  const [message, setMessage] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [randomizedImage, setRandomizedImage] = React.useState<any>(null);
 
@@ -72,6 +72,8 @@ function Login() {
 
   const closeWindow = () => navigation.goBack();
   const togglePasswordSecurity = () => setShowPassword(!showPassword);
+  const dismissAlert = () => setMessage(null);
+
   const loginWithEmailAndPassword = () => {
     setLoading(true);
     setMessage(null);
@@ -86,8 +88,11 @@ function Login() {
         }, 2000);
       })
       .catch((error) => {
-        setMessage(error);
+        setMessage(error.message);
         setLoading(false);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
       });
   };
   React.useEffect(() => {
@@ -97,83 +102,78 @@ function Login() {
   }, []);
 
   return (
-    <>
-      <SafeAreaView style={styles.window}>
-        <ImageBackground
-          source={randomizedImage && { uri: randomizedImage }}
-          style={{
-            height: Dimensions.get("window").height,
-            width: Dimensions.get("window").width,
-          }}>
-          <Header
-            left={
-              <IconButton
-                icon="close"
-                color={activeColor}
-                size={24}
-                onPress={closeWindow}
-              />
-            }
-            style={{ backgroundColor: colors.backdrop }}
-          />
-          <ScrollView
-            style={{
-              flex: 1,
-              paddingHorizontal: 12,
-              backgroundColor: colors.backdrop,
-            }}>
-            <Text style={styles.title}>Login to your account.</Text>
-            <View style={styles.textFieldsView}>
-              <View style={styles.textField}>
-                <TextInput
-                  keyboardType="email-address"
-                  placeholder="Email"
-                  style={{ color: "#FFF", flex: 1, fontSize: 14 }}
-                  placeholderTextColor={colors.placeholder}
-                  value={email}
-                  onChangeText={(value) => setEmail(value)}
-                />
-              </View>
-              <View style={{ height: 21 }}></View>
-              <View style={styles.textField}>
-                <TextInput
-                  placeholder="Password"
-                  secureTextEntry={showPassword === false}
-                  style={{ color: "#FFF", flex: 1, fontSize: 14 }}
-                  placeholderTextColor={colors.placeholder}
-                  value={password}
-                  onChangeText={(value) => setPassword(value)}
-                />
-                <IconButton
-                  icon={
-                    showPassword === false ? "eye-off-outline" : "eye-outline"
-                  }
-                  onPress={togglePasswordSecurity}
-                  size={16}
-                  color={colors.placeholder}
-                  style={{ marginStart: 6 }}
-                  animated
-                />
-              </View>
-            </View>
-            <Button
-              mode="full"
-              onPress={loginWithEmailAndPassword}
-              text="Login"
-              icon="chevron-right"
-              style={{ alignSelf: "flex-end" }}
-              loading={loading}
+    <SafeAreaView style={styles.window}>
+      <ImageBackground
+        source={randomizedImage && { uri: randomizedImage }}
+        style={{
+          height: Dimensions.get("window").height,
+          width: Dimensions.get("window").width,
+        }}>
+        <Header
+          left={
+            <IconButton
+              icon="close"
+              color={activeColor}
+              size={24}
+              onPress={closeWindow}
             />
-          </ScrollView>
-        </ImageBackground>
-      </SafeAreaView>
-      {message && (
-        <Alert
-          message={message.message ? message.message : message}
-          action={true}
+          }
+          style={{ backgroundColor: colors.backdrop }}
         />
+        <ScrollView
+          style={{
+            flex: 1,
+            paddingHorizontal: 12,
+            backgroundColor: colors.backdrop,
+          }}>
+          <Text style={styles.title}>Login to your account.</Text>
+          <View style={styles.textFieldsView}>
+            <View style={styles.textField}>
+              <TextInput
+                keyboardType="email-address"
+                placeholder="Email"
+                style={{ color: "#FFF", flex: 1, fontSize: 14 }}
+                placeholderTextColor={colors.placeholder}
+                value={email}
+                onChangeText={(value) => setEmail(value)}
+              />
+            </View>
+            <View style={{ height: 21 }}></View>
+            <View style={styles.textField}>
+              <TextInput
+                placeholder="Password"
+                secureTextEntry={showPassword === false}
+                style={{ color: "#FFF", flex: 1, fontSize: 14 }}
+                placeholderTextColor={colors.placeholder}
+                value={password}
+                onChangeText={(value) => setPassword(value)}
+              />
+              <IconButton
+                icon={
+                  showPassword === false ? "eye-off-outline" : "eye-outline"
+                }
+                onPress={togglePasswordSecurity}
+                size={16}
+                color={colors.placeholder}
+                style={{ marginStart: 6 }}
+                animated
+              />
+            </View>
+          </View>
+          <Button
+            mode="full"
+            onPress={loginWithEmailAndPassword}
+            text="Login"
+            icon="chevron-right"
+            style={{ alignSelf: "flex-end" }}
+            loading={loading}
+          />
+        </ScrollView>
+      </ImageBackground>
+      {message && (
+        <Alert message={message} action={true} onPress={dismissAlert} />
       )}
-    </>
+    </SafeAreaView>
   );
 }
 

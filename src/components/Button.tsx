@@ -22,7 +22,7 @@ interface ButtonProps extends ViewProps {
   disabled?: boolean;
   loading?: boolean;
   color?: string;
-  onPress: () => void;
+  onPress?: () => void;
   iconButton?: boolean;
   fontSize?: number;
 }

@@ -98,6 +98,7 @@ function Register() {
 
   const togglePasswordSecurity = () => setShowPassword(!showPassword);
   const goBack = () => navigation.goBack();
+  const dismissAlert = () => setMessage(null);
   const pickImage = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -256,8 +257,10 @@ function Register() {
             />
           </ScrollView>
         </ImageBackground>
+        {message && (
+          <Alert message={message} action={true} onPress={dismissAlert} />
+        )}
       </SafeAreaView>
-      {message && <Alert message={message} action={true} />}
     </>
   );
 }

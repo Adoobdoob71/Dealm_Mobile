@@ -142,6 +142,7 @@ function Post(props: PostProps) {
             icon="share"
             color={activeColor}
             onPress={sharePost}
+            disabled={firebase.default.auth().currentUser === null}
             size={16}
           />
           <IconButton
@@ -150,6 +151,7 @@ function Post(props: PostProps) {
             color={activeColor}
             onPress={replyPrivately}
             disabled={
+              firebase.default.auth().currentUser === null ||
               firebase.default.auth().currentUser?.uid === props.userUID
             }
           />

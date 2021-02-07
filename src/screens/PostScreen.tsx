@@ -40,8 +40,6 @@ class PostScreen extends React.Component<any, state> {
     try {
       let db = firebase.default
         .firestore()
-        .collection("users")
-        .doc(this.props.route.params.userUID)
         .collection("posts")
         .doc(this.props.route.params.postID)
         .collection("comments");

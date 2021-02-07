@@ -23,6 +23,7 @@ interface state {
   posts: firebase.default.firestore.QueryDocumentSnapshot<PostProps>[];
   menuVisible: boolean;
   loading: boolean;
+  contacts: string[];
 }
 
 class Home extends React.Component<any, state> {
@@ -32,6 +33,7 @@ class Home extends React.Component<any, state> {
       posts: [],
       menuVisible: false,
       loading: false,
+      contacts: [],
     };
   }
 
@@ -44,12 +46,9 @@ class Home extends React.Component<any, state> {
 
   componentDidMount() {
     firebase.default.auth().onAuthStateChanged(async (user) => {
-      if (user) {
-        this.loadPosts();
-        this.sortPosts();
-      } else {
-        this.setState({ posts: [] });
-      }
+      this.setState({ posts: [] });
+      await this.loadPosts();
+      this.sortPosts();
     });
     this.focusListener = this.props.navigation.addListener("tabPress", () => {
       if (this.state.posts.length != 0)
@@ -61,28 +60,35 @@ class Home extends React.Component<any, state> {
     let user = firebase.default.auth().currentUser;
     this.setState({ loading: true, posts: [] });
     if (user) {
-      let db = firebase.default.firestore().collection("users");
-      let result = await db
-        .doc(user?.uid)
-        .collection("posts")
-        .orderBy("time", "desc")
-        .limit(5)
+      let result = await firebase.default
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .collection("contacts")
         .get();
-      let docs = result.docs as firebase.default.firestore.QueryDocumentSnapshot<PostProps>[];
-      this.setState({ posts: docs });
-      let result_two = await db.doc(user?.uid).collection("contacts").get();
-      let docs_two = result_two.docs as firebase.default.firestore.QueryDocumentSnapshot<RoomProps>[];
-      docs_two.forEach(async (item) => {
-        let resultItem = await db
-          .doc(item.data().userUID)
-          .collection("posts")
-          .orderBy("time", "desc")
-          .limit(5)
-          .get();
-        let arr = resultItem.docs as firebase.default.firestore.QueryDocumentSnapshot<PostProps>[];
-        this.setState({ posts: [...this.state.posts, ...arr] });
+      let docs = result.docs as firebase.default.firestore.QueryDocumentSnapshot<RoomProps>[];
+      docs.forEach((item) =>
+        this.setState({
+          contacts: [...this.state.contacts, item.data().userUID],
+        })
+      );
+      this.setState({ contacts: [...this.state.contacts, user.uid] });
+      let postsResult = await firebase.default
+        .firestore()
+        .collection("posts")
+        .where("userUID", "in", this.state.contacts)
+        .get();
+      this.setState({
+        posts: postsResult.docs as firebase.default.firestore.QueryDocumentSnapshot<PostProps>[],
       });
     } else {
+      let postsResult = await firebase.default
+        .firestore()
+        .collection("posts")
+        .get();
+      this.setState({
+        posts: postsResult.docs as firebase.default.firestore.QueryDocumentSnapshot<PostProps>[],
+      });
     }
     this.setState({ loading: false });
   };
@@ -113,18 +119,8 @@ class Home extends React.Component<any, state> {
     const colors = this.props.theme.colors;
     const { isThemeDark } = this.context;
     const activeColor = isThemeDark ? colors.primary : colors.text;
-    const openMenu = () => this.setState({ menuVisible: true });
-    const closeMenu = () => this.setState({ menuVisible: false });
-    const openRegisterWindow = () => {
-      this.props.navigation.navigate("Register");
-      this.setState({ menuVisible: false });
-    };
     const openSettingsWindow = () => {
       this.props.navigation.navigate("Settings");
-      this.setState({ menuVisible: false });
-    };
-    const openLoginWindow = () => {
-      this.props.navigation.navigate("Login");
       this.setState({ menuVisible: false });
     };
     const styles = StyleSheet.create({
@@ -164,73 +160,38 @@ class Home extends React.Component<any, state> {
                   color={activeColor}
                 />
               )}
-              <Menu
-                anchor={
-                  <IconButton
-                    icon="dots-vertical"
-                    onPress={openMenu}
-                    color={activeColor}
-                    size={21}
-                  />
-                }
-                contentStyle={{
-                  backgroundColor: colors.surface,
-                  // borderWidth: 0.25,
-                  // borderColor: colors.accent,
-                }}
-                visible={this.state.menuVisible}
-                onDismiss={closeMenu}>
-                {firebase.default.auth().currentUser === null && (
-                  <Menu.Item title="Register" onPress={openRegisterWindow} />
-                )}
-                <Menu.Item title="Settings" onPress={openSettingsWindow} />
-              </Menu>
+              <IconButton
+                icon="cog"
+                onPress={openSettingsWindow}
+                color={activeColor}
+                size={21}
+              />
             </View>
           }
         />
-        {firebase.default.auth().currentUser ? (
-          <FlatList
-            data={this.state.posts}
-            ref={(ref) => (this.flatList = ref)}
-            renderItem={({ item }) => <Post {...item.data()} key={item.id} />}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.loading}
-                onRefresh={this.loadPosts}
-                progressBackgroundColor={colors.surface}
-                colors={[colors.accent]}
-              />
-            }
-            refreshing={this.state.loading}
-            ItemSeparatorComponent={() => (
-              <View
-                style={{
-                  height: 0.25,
-                  backgroundColor: colors.accent,
-                  width: "90%",
-                  alignSelf: "center",
-                }}></View>
-            )}
-          />
-        ) : (
-          <View style={styles.mainView}>
+        <FlatList
+          data={this.state.posts}
+          ref={(ref) => (this.flatList = ref)}
+          renderItem={({ item }) => <Post {...item.data()} key={item.id} />}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={this.loadPosts}
+              progressBackgroundColor={colors.surface}
+              colors={[colors.accent]}
+            />
+          }
+          refreshing={this.state.loading}
+          ItemSeparatorComponent={() => (
             <View
               style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}>
-              <Text style={styles.hello}>Hello </Text>
-              <Text style={styles.there}>There</Text>
-            </View>
-            <Button
-              mode="full"
-              onPress={openLoginWindow}
-              text="Sign in"
-              icon="chevron-right"
-              style={{ marginTop: 24 }}
-            />
-          </View>
-        )}
+                height: 0.25,
+                backgroundColor: colors.accent,
+                width: "90%",
+                alignSelf: "center",
+              }}></View>
+          )}
+        />
       </SafeAreaView>
     );
   }

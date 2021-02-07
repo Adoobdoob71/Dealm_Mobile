@@ -40,24 +40,17 @@ class Profile extends React.Component<any, state> {
       postsAmount: number;
       friendsAmount: number;
     } = result.data() as User & { postsAmount: number; friendsAmount: number };
-    let postsAmountResult = await ref.collection("posts").get();
-    userData.postsAmount = postsAmountResult.docs.length;
+    let postsResult = await firebase.default
+      .firestore()
+      .collection("posts")
+      .where("userUID", "==", userUID)
+      .get();
+    let postsResultData = postsResult.docs as firebase.default.firestore.QueryDocumentSnapshot<PostProps>[];
+    this.setState({ posts: postsResultData });
+    userData.postsAmount = postsResult.docs.length;
     let friendsAmountResult = await ref.collection("contacts").get();
     userData.friendsAmount = friendsAmountResult.docs.length;
     this.setState({ userDetails: userData });
-  };
-
-  loadUserPosts = async (userUID?: string) => {
-    let result = await firebase.default
-      .firestore()
-      .collection("users")
-      .doc(userUID)
-      .collection("posts")
-      .orderBy("time", "desc")
-      .limit(10)
-      .get();
-    let data = result.docs as firebase.default.firestore.QueryDocumentSnapshot<PostProps>[];
-    this.setState({ posts: data });
   };
 
   componentDidMount() {
@@ -66,12 +59,10 @@ class Profile extends React.Component<any, state> {
       firebase.default.auth().onAuthStateChanged((user) => {
         if (user) {
           this.loadUserDetails(user?.uid);
-          this.loadUserPosts(user?.uid);
         } else this.setState({ posts: [], userDetails: null });
       });
     } else {
       this.loadUserDetails(this.props.route.params.userUID);
-      this.loadUserPosts(this.props.route.params.userUID);
     }
   }
   render() {
@@ -81,8 +72,7 @@ class Profile extends React.Component<any, state> {
     const activeColor = isThemeDark ? colors.primary : colors.text;
 
     const goBack = () => this.props.navigation.goBack();
-    const openCreatePostWindow = () =>
-      this.props.navigation.navigate("CreatePost");
+    const openLoginWindow = () => this.props.navigation.navigate("Login");
 
     const styles = StyleSheet.create({
       header: {
@@ -104,6 +94,7 @@ class Profile extends React.Component<any, state> {
         fontSize: 21,
         color: colors.text,
         fontWeight: "bold",
+        margiRight: 12,
       },
       profileDetails: {
         flexDirection: "row",
@@ -143,19 +134,23 @@ class Profile extends React.Component<any, state> {
                       justifyContent: "space-between",
                       marginTop: 8,
                     }}>
-                    <Text style={styles.nickname}>
+                    <Text
+                      style={styles.nickname}
+                      numberOfLines={1}
+                      ellipsizeMode="tail">
                       {this.state.userDetails?.nickname}
                     </Text>
-                    {this.props.route.params.bottomNavigator &&
-                      this.state.userDetails && (
+                    {/* {firebase.default.auth().currentUser === null &&
+                      this.props.route.params.bottomNavigator && (
                         <Button
-                          mode="full"
+                          mode="bordered"
+                          icon="account"
                           color={colors.accent}
-                          onPress={openCreatePostWindow}
-                          text="Create a post"
+                          onPress={openLoginWindow}
+                          text="Login"
                           fontSize={9}
                         />
-                      )}
+                      )} */}
                   </View>
                   <View style={styles.profileDetails}>
                     <ProfileDetailView

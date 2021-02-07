@@ -87,7 +87,7 @@ class Share extends React.Component<any, state> {
     this.setState({ loading: false });
   };
 
-  sharePost = () => {
+  sharePost = async () => {
     this.setState({ sending: true });
     if (this.state.textMessage.trim().length === 0) {
       this.setState({
@@ -100,7 +100,9 @@ class Share extends React.Component<any, state> {
       let newMessage: MessageProps = {
         text: this.state.textMessage.trim(),
         profilePicture: this.state.userDetails?.profilePicture,
-        imageUrl: this.props.route.params.imageUrl,
+        imageUrl: this.props.route.params.imageUrl
+          ? this.props.route.params.imageUrl
+          : "",
         nickname: this.state.userDetails?.nickname,
         time: firebase.default.firestore.Timestamp.now(),
         userUID: this.state.userDetails?.userUID,
@@ -109,7 +111,9 @@ class Share extends React.Component<any, state> {
       this.state.selectedContacts.map(async (item) => {
         await db.doc(item.roomID).collection("messages").add(newMessage);
       });
-      this.setState({ alertMessage: "Successfully sent to all receipients!" });
+      this.setState({
+        alertMessage: "Successfully sent to all receipients!",
+      });
       setTimeout(() => {
         this.props.navigation.goBack();
       }, 5000);
@@ -142,6 +146,7 @@ class Share extends React.Component<any, state> {
     const onChangeText = (value: string) =>
       this.setState({ textMessage: value });
     const screenHeight = Dimensions.get("window").height;
+    const dismissAlert = () => this.setState({ alertMessage: null });
 
     const styles = StyleSheet.create({
       messageBoxView: {
@@ -174,73 +179,69 @@ class Share extends React.Component<any, state> {
     });
 
     return (
-      <>
-        <SafeAreaView>
-          <Header
-            title="Share post to friends"
-            left={
-              <IconButton
-                icon="arrow-left"
-                color={activeColor}
-                onPress={goBack}
-              />
-            }
-            right={
-              <IconButton
-                icon="check"
-                size={18}
-                color={activeColor}
-                onPress={openModal}
-                disabled={
-                  this.state.sending || this.state.selectedContacts.length === 0
-                }
-              />
-            }
-          />
-          <FlatList
-            data={this.state.contacts}
-            renderItem={({ item }) => (
-              <Contact
-                {...item}
-                shareScreen={true}
-                checkedContact={this.state.selectedContacts.some(
-                  (itemTemp) => itemTemp.userUID === item.userUID
-                )}
-                onPress={() => this.setContactAsSelected(item)}
-              />
-            )}
-          />
-          <Portal>
-            <Modal visible={this.state.showModal} onDismiss={closeModal}>
-              <View style={styles.messageBoxView}>
-                <View style={styles.messageBoxViewTop}>
-                  <Text style={styles.messageBoxTitle}>
-                    What's the message?
-                  </Text>
-                  <IconButton
-                    icon="send"
-                    size={18}
-                    color={activeColor}
-                    onPress={this.sharePost}
-                    disabled={this.state.sending}
-                  />
-                </View>
-                <TextInput
-                  value={this.state.textMessage}
-                  style={styles.messageBox}
-                  onChangeText={onChangeText}
-                  placeholder="Write it here"
-                  placeholderTextColor={colors.placeholder}
-                  multiline
+      <SafeAreaView style={{ flex: 1 }}>
+        <Header
+          title="Share post to friends"
+          left={
+            <IconButton
+              icon="arrow-left"
+              color={activeColor}
+              onPress={goBack}
+            />
+          }
+          right={
+            <IconButton
+              icon="check"
+              size={18}
+              color={activeColor}
+              onPress={openModal}
+              disabled={
+                this.state.sending || this.state.selectedContacts.length === 0
+              }
+            />
+          }
+        />
+        <FlatList
+          data={this.state.contacts}
+          renderItem={({ item }) => (
+            <Contact
+              {...item}
+              shareScreen={true}
+              checkedContact={this.state.selectedContacts.some(
+                (itemTemp) => itemTemp.userUID === item.userUID
+              )}
+              onPress={() => this.setContactAsSelected(item)}
+            />
+          )}
+        />
+        <Portal>
+          <Modal visible={this.state.showModal} onDismiss={closeModal}>
+            <View style={styles.messageBoxView}>
+              <View style={styles.messageBoxViewTop}>
+                <Text style={styles.messageBoxTitle}>What's the message?</Text>
+                <IconButton
+                  icon="send"
+                  size={18}
+                  color={activeColor}
+                  onPress={this.sharePost}
+                  disabled={this.state.sending}
                 />
               </View>
-            </Modal>
-          </Portal>
-        </SafeAreaView>
+              <TextInput
+                value={this.state.textMessage}
+                style={styles.messageBox}
+                onChangeText={onChangeText}
+                placeholder="Write it here"
+                placeholderTextColor={colors.placeholder}
+                multiline
+              />
+            </View>
+          </Modal>
+        </Portal>
         {this.state.alertMessage && (
-          <Alert message={this.state.alertMessage} action={true} />
+          <Alert message={this.state.alertMessage} onPress={dismissAlert} />
         )}
-      </>
+      </SafeAreaView>
     );
   }
 }
