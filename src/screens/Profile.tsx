@@ -72,7 +72,7 @@ class Profile extends React.Component<any, state> {
     const activeColor = isThemeDark ? colors.primary : colors.text;
 
     const goBack = () => this.props.navigation.goBack();
-    const openLoginWindow = () => this.props.navigation.navigate("Login");
+    const openSettingsWindow = () => this.props.navigation.navigate("Settings");
 
     const styles = StyleSheet.create({
       header: {
@@ -94,7 +94,7 @@ class Profile extends React.Component<any, state> {
         fontSize: 21,
         color: colors.text,
         fontWeight: "bold",
-        margiRight: 12,
+        marginRight: 12,
       },
       profileDetails: {
         flexDirection: "row",
@@ -140,17 +140,17 @@ class Profile extends React.Component<any, state> {
                       ellipsizeMode="tail">
                       {this.state.userDetails?.nickname}
                     </Text>
-                    {/* {firebase.default.auth().currentUser === null &&
-                      this.props.route.params.bottomNavigator && (
-                        <Button
-                          mode="bordered"
-                          icon="account"
-                          color={colors.accent}
-                          onPress={openLoginWindow}
-                          text="Login"
-                          fontSize={9}
-                        />
-                      )} */}
+
+                    {this.props.route.params.bottomNavigator && (
+                      <Button
+                        mode="bordered"
+                        icon="cog"
+                        color={colors.accent}
+                        onPress={openSettingsWindow}
+                        text="Settings"
+                        fontSize={9}
+                      />
+                    )}
                   </View>
                   <View style={styles.profileDetails}>
                     <ProfileDetailView

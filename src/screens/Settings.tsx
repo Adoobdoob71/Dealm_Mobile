@@ -122,7 +122,7 @@ function Settings() {
           <List.Section>
             <List.Subheader>Misc</List.Subheader>
             <List.Item
-              title="About me"
+              title="About"
               description="Read about me"
               onPress={openAboutWindow}
               left={() => <List.Icon icon="information" />}

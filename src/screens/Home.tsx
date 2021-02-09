@@ -119,10 +119,8 @@ class Home extends React.Component<any, state> {
     const colors = this.props.theme.colors;
     const { isThemeDark } = this.context;
     const activeColor = isThemeDark ? colors.primary : colors.text;
-    const openSettingsWindow = () => {
-      this.props.navigation.navigate("Settings");
-      this.setState({ menuVisible: false });
-    };
+    const openCreatePostWindow = () =>
+      this.props.navigation.navigate("CreatePost");
     const styles = StyleSheet.create({
       mainView: {
         flex: 1,
@@ -161,8 +159,8 @@ class Home extends React.Component<any, state> {
                 />
               )}
               <IconButton
-                icon="cog"
-                onPress={openSettingsWindow}
+                icon="plus"
+                onPress={openCreatePostWindow}
                 color={activeColor}
                 size={21}
               />
