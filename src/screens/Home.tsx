@@ -162,6 +162,7 @@ class Home extends React.Component<any, state> {
                 icon="plus"
                 onPress={openCreatePostWindow}
                 color={activeColor}
+                disabled={!firebase.default.auth().currentUser}
                 size={21}
               />
             </View>

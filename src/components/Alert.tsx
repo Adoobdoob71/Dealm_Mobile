@@ -1,6 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import * as React from "react";
-import { Dimensions, SafeAreaView, StyleSheet, Text } from "react-native";
+import {
+  Dimensions,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+} from "react-native";
 import { useTheme } from "react-native-paper";
 import { PreferencesContext } from "../../Theming";
 import { Button } from "./Button";
@@ -27,14 +33,25 @@ function Alert(props: AlertProps) {
       borderColor: colors.primary,
       flexDirection: "row",
       alignItems: "center",
-      paddingHorizontal: 10,
-      paddingVertical: 8,
       elevation: 1,
       margin: 8,
       position: "absolute",
-      top: screenHeight * 0.9,
-      left: screenWidth * 0.1,
-      right: screenWidth * 0.1,
+      ...Platform.select({
+        web: {
+          top: screenHeight * 0.9,
+          left: screenWidth * 0.1,
+          right: screenWidth * 0.1,
+          paddingHorizontal: 14,
+          paddingVertical: 12,
+        },
+        default: {
+          top: screenHeight * 0.85,
+          left: screenWidth * 0.1,
+          right: screenWidth * 0.1,
+          paddingHorizontal: 12,
+          paddingVertical: 10,
+        },
+      }),
     },
     message: {
       fontSize: 14,
@@ -44,7 +61,6 @@ function Alert(props: AlertProps) {
       marginHorizontal: 12,
     },
   });
-
   return (
     <SafeAreaView style={styles.background}>
       <Text style={styles.message} numberOfLines={1} ellipsizeMode="tail">

@@ -81,7 +81,7 @@ function About() {
           style={styles.profile_picture}
         />
         <Text style={styles.description}>
-          My name is Elad Mekonen, I'm mobile/web developer and I like to make
+          My name is Elad Mekonen, I'm mobile/web developer and I like making
           awesome stuff
         </Text>
         <View style={styles.linksView}>

@@ -169,7 +169,7 @@ function CreatePost() {
               icon="plus"
               onPress={submitPost}
               color={activeColor}
-              disabled={submitting}
+              disabled={submitting || !firebase.default.auth().currentUser}
               size={18}
             />
           </View>

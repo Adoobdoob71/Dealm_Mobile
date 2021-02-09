@@ -8,6 +8,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+firebaseconfig.ts
 
 # macOS
 .DS_Store
@@ -32,3 +33,4 @@ web-build/
 /.pnp
 .pnp.js
 # @end @expo/next-adapter
+node_modules
