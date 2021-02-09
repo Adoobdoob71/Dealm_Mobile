@@ -12,6 +12,7 @@ import CreateComment from "../screens/CreateComment";
 import Profile from "../screens/Profile";
 import ImageScreen from "../screens/ImageScreen";
 import Share from "../screens/Share";
+import About from "../screens/About";
 
 const Stack = createStackNavigator();
 
@@ -76,6 +77,11 @@ function StackNavigator() {
       <Stack.Screen
         name="ShareScreen"
         component={Share}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AboutScreen"
+        component={About}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

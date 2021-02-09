@@ -6,6 +6,7 @@ import { DarkAppTheme, LightAppTheme, PreferencesContext } from "./Theming";
 import { StatusBar } from "expo-status-bar";
 import * as firebase from "firebase";
 import { Appearance } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyChey4oljhd6lxuyd_VfbvFcPW6MwfZPTE",
@@ -16,13 +17,26 @@ const firebaseConfig = {
   appId: "1:891093598191:web:18777dd9d7de0bb5ce001a",
   measurementId: "G-LVPRQYHN21",
 };
-firebase.default.initializeApp(firebaseConfig);
+if (firebase.default.apps.length === 0)
+  firebase.default.initializeApp(firebaseConfig);
 
 export default function App() {
   const [isThemeDark, setIsThemeDark] = React.useState<boolean>(false);
   let theme = isThemeDark ? DarkAppTheme : LightAppTheme;
 
-  const toggleTheme = React.useCallback(() => {
+  React.useEffect(() => {
+    loadTheme().then((result) => {
+      setIsThemeDark(result === "dark" ? true : false);
+    });
+  }, []);
+
+  const loadTheme = async () => {
+    let result = await AsyncStorage.getItem("theme-status");
+    return result;
+  };
+
+  const toggleTheme = React.useCallback(async () => {
+    await AsyncStorage.setItem("theme-status", isThemeDark ? "light" : "dark");
     return setIsThemeDark(!isThemeDark);
   }, [isThemeDark]);
 

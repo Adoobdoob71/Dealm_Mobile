@@ -17,6 +17,7 @@ function Settings() {
   const dismissAlert = () => setAlertMessage(null);
   const openRegisterWindow = () => navigation.navigate("Register");
   const openLoginWindow = () => navigation.navigate("Login");
+  const openAboutWindow = () => navigation.navigate("AboutScreen");
   const signOut = async () => {
     try {
       await firebase.default
@@ -53,7 +54,7 @@ function Settings() {
           }
           title="Settings"
         />
-        <ScrollView>
+        <ScrollView style={{ height: 0 }}>
           <List.Section>
             <List.Subheader>Account</List.Subheader>
             <List.Item
@@ -116,6 +117,15 @@ function Settings() {
               description="Change the light up color"
               onPress={() => {}}
               left={() => <List.Icon icon="bell" />}
+            />
+          </List.Section>
+          <List.Section>
+            <List.Subheader>Misc</List.Subheader>
+            <List.Item
+              title="About me"
+              description="Read about me"
+              onPress={openAboutWindow}
+              left={() => <List.Icon icon="information" />}
             />
           </List.Section>
         </ScrollView>
