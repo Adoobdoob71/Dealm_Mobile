@@ -17,7 +17,7 @@
       "**/*"
     ],
     "ios": {
-      "bundlerIdentifier": "com.dealm",
+      "bundleIdentifier": "com.dealm",
       "buildNumber": "1.0.0",
       "supportsTablet": false
     },
