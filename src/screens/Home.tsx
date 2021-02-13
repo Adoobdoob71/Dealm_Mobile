@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { PreferencesContext } from "../../Theming";
@@ -18,6 +19,7 @@ import { Post, PostProps } from "../components/Post";
 import * as firebase from "firebase";
 import { IconButton, Menu, withTheme } from "react-native-paper";
 import { RoomProps } from "../components/Classes";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface state {
   posts: firebase.default.firestore.QueryDocumentSnapshot<PostProps>[];
@@ -121,6 +123,8 @@ class Home extends React.Component<any, state> {
     const activeColor = isThemeDark ? colors.primary : colors.text;
     const openCreatePostWindow = () =>
       this.props.navigation.navigate("CreatePost");
+    const openSearchPostWindow = () =>
+      this.props.navigation.navigate("SearchPost");
     const styles = StyleSheet.create({
       mainView: {
         flex: 1,
@@ -143,11 +147,37 @@ class Home extends React.Component<any, state> {
         color: colors.text,
         marginVertical: 24,
       },
+      searchButtonView: {
+        flex: 1,
+        borderRadius: 8,
+        padding: 10,
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: colors.background,
+      },
+      searchButtonPlaceholder: {
+        fontSize: 14,
+        color: colors.placeholder,
+        marginHorizontal: 16,
+      },
     });
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Header
-          title="Dealm"
+          center={
+            <TouchableWithoutFeedback
+              onPress={openSearchPostWindow}
+              style={{ marginHorizontal: 12 }}>
+              <View style={styles.searchButtonView}>
+                <MaterialCommunityIcons
+                  name="magnify"
+                  size={16}
+                  color={colors.placeholder}
+                />
+                <Text style={styles.searchButtonPlaceholder}>Search</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          }
           right={
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               {Platform.OS === "web" && (

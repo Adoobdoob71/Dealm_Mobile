@@ -65,8 +65,6 @@ class PostScreen extends React.Component<any, state> {
     const screenWidth = Dimensions.get("screen").width;
     const screenHeight = Dimensions.get("screen").height;
 
-    const changeBookmarkStatus = () =>
-      this.setState({ bookmarked: !this.state.bookmarked });
     const closePostWindow = () => navigation.goBack();
     const openAddCommentWindow = () =>
       navigation.navigate("CreateComment", { ...this.props.route.params });
@@ -160,20 +158,12 @@ class PostScreen extends React.Component<any, state> {
           }
           title={this.props.title}
           right={
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <IconButton
-                icon={this.state.bookmarked ? "bookmark" : "bookmark-outline"}
-                color={activeColor}
-                onPress={changeBookmarkStatus}
-                size={18}
-              />
-              <IconButton
-                icon="plus"
-                color={activeColor}
-                onPress={openAddCommentWindow}
-                size={18}
-              />
-            </View>
+            <IconButton
+              icon="plus"
+              color={activeColor}
+              onPress={openAddCommentWindow}
+              size={18}
+            />
           }
         />
         <FlatList
