@@ -2,6 +2,7 @@ import * as React from 'react';
 import { DefaultTheme, DarkTheme } from 'react-native-paper';
 import { Theme } from 'react-native-paper/lib/typescript/src/types';
 
+// Light Theme - White
 const LightAppTheme: Theme = {
   ...DefaultTheme,
   colors: {
@@ -14,6 +15,7 @@ const LightAppTheme: Theme = {
   }
 } 
 
+// Dark theme - Purple
 // const DarkAppTheme : Theme = {
 //   ...DarkTheme,
 //   colors: {
@@ -27,6 +29,7 @@ const LightAppTheme: Theme = {
 //   }
 // }
 
+// Dark theme - Black
 const DarkAppTheme: Theme = {
   ...DarkTheme,
   colors: {

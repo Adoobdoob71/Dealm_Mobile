@@ -132,21 +132,6 @@ class Home extends React.Component<any, state> {
         alignItems: "center",
         justifyContent: "center",
       },
-      hello: {
-        fontSize: 32,
-        color: colors.primary,
-        fontWeight: "bold",
-      },
-      there: {
-        fontSize: 32,
-        color: colors.accent,
-        fontWeight: "bold",
-      },
-      message: {
-        fontSize: 18,
-        color: colors.text,
-        marginVertical: 24,
-      },
       searchButtonView: {
         flex: 1,
         borderRadius: 8,
@@ -164,10 +149,19 @@ class Home extends React.Component<any, state> {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Header
+          left={
+            <IconButton
+              icon="plus"
+              onPress={openCreatePostWindow}
+              color={activeColor}
+              disabled={!firebase.default.auth().currentUser}
+              size={21}
+            />
+          }
           center={
             <TouchableWithoutFeedback
               onPress={openSearchPostWindow}
-              style={{ marginHorizontal: 12 }}>
+              style={{ marginHorizontal: 16 }}>
               <View style={styles.searchButtonView}>
                 <MaterialCommunityIcons
                   name="magnify"
@@ -179,23 +173,14 @@ class Home extends React.Component<any, state> {
             </TouchableWithoutFeedback>
           }
           right={
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {Platform.OS === "web" && (
-                <IconButton
-                  icon="refresh"
-                  onPress={this.loadPosts}
-                  size={21}
-                  color={activeColor}
-                />
-              )}
+            Platform.OS === "web" ? (
               <IconButton
-                icon="plus"
-                onPress={openCreatePostWindow}
-                color={activeColor}
-                disabled={!firebase.default.auth().currentUser}
+                icon="refresh"
+                onPress={this.loadPosts}
                 size={21}
+                color={activeColor}
               />
-            </View>
+            ) : undefined
           }
         />
         <FlatList

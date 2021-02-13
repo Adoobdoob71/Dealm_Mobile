@@ -38,13 +38,12 @@ function CreatePost() {
       flex: 1,
     },
     title: {
-      fontSize: 16,
+      fontSize: 14,
       color: colors.text,
     },
     body: {
-      fontSize: 16,
+      fontSize: 12,
       marginTop: 16,
-      flex: 1,
       color: colors.text,
       textAlignVertical: "top",
     },
@@ -176,7 +175,7 @@ function CreatePost() {
         }
       />
       <ScrollView style={{ flex: 1 }}>
-        <View style={{ flex: 1, padding: 10 }}>
+        <View style={{ flex: 1, padding: 16 }}>
           <TextInput
             value={title}
             style={styles.title}

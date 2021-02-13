@@ -53,7 +53,11 @@ function Header(props: HeaderProps) {
   return (
     <TouchableWithoutFeedback
       onPress={props.onPress}
-      style={{ width: "100%", borderWidth: 0 }}>
+      style={{
+        width: "100%",
+        borderWidth: 0,
+        elevation: props.transparent ? 0 : 4,
+      }}>
       <View style={[styles.header, props.style]}>
         {props.left}
         {props.center ? (

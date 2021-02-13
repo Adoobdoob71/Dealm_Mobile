@@ -119,6 +119,7 @@ class Profile extends React.Component<any, state> {
         />
         <FlatList
           data={this.state.posts}
+          style={{ height: 0 }}
           ListHeaderComponent={() => (
             <View style={styles.header}>
               <View style={styles.content}>
