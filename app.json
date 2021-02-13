@@ -8,7 +8,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ff8e71"
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -17,9 +17,13 @@
       "**/*"
     ],
     "ios": {
+      "bundlerIdentifier": "com.dealm",
+      "buildNumber": "1.0.0",
       "supportsTablet": false
     },
     "android": {
+      "package": "com.dealm",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ff8e71"
@@ -29,7 +33,7 @@
       "favicon": "./assets/favicon.png",
       "themeColor": "#ff8e71"
     },
-    "description": "Dealm",
+    "description": "Dealm - Share your thoughts with people",
     "githubUrl": "https://github.com/Adoobdoob71/Dealm_Mobile"
   }
 }
