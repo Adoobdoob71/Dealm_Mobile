@@ -106,6 +106,13 @@ class Profile extends React.Component<any, state> {
         fontSize: 12,
         color: colors.placeholder,
       },
+      profileTop: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginTop: 8,
+        flexWrap: "wrap",
+      },
     });
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -128,13 +135,7 @@ class Profile extends React.Component<any, state> {
                   style={styles.profilePicture}
                 />
                 <View style={{ flex: 1, marginHorizontal: 10 }}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      marginTop: 8,
-                    }}>
+                  <View style={styles.profileTop}>
                     <Text
                       style={styles.nickname}
                       numberOfLines={1}

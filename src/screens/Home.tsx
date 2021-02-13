@@ -135,7 +135,8 @@ class Home extends React.Component<any, state> {
       searchButtonView: {
         flex: 1,
         borderRadius: 8,
-        padding: 10,
+        paddingHorizontal: 8,
+        paddingVertical: 6,
         flexDirection: "row",
         alignItems: "center",
         backgroundColor: colors.background,

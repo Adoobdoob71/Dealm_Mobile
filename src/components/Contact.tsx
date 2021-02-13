@@ -28,7 +28,6 @@ function Contact(
       width: 48,
       height: 48,
       borderRadius: 24,
-      marginLeft: 10,
     },
     contactDetails: {
       flexDirection: "column",
@@ -58,10 +57,12 @@ function Contact(
         onLongPress={openProfile}>
         <View style={styles.contactView}>
           {props.shareScreen && (
-            <Checkbox
-              status={props.checkedContact ? "checked" : "unchecked"}
-              color={activeColor}
-            />
+            <View style={{ marginRight: 10 }}>
+              <Checkbox
+                status={props.checkedContact ? "checked" : "unchecked"}
+                color={activeColor}
+              />
+            </View>
           )}
           <Image
             source={{ uri: props.profilePicture }}

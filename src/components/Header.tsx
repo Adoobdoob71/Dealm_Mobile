@@ -56,7 +56,6 @@ function Header(props: HeaderProps) {
       style={{
         width: "100%",
         borderWidth: 0,
-        elevation: props.transparent ? 0 : 4,
       }}>
       <View style={[styles.header, props.style]}>
         {props.left}

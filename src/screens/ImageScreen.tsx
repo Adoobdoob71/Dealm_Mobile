@@ -19,7 +19,7 @@ class ImageScreen extends React.Component<any, state> {
   constructor(props: any) {
     super(props);
     this.state = {
-      aspectRatio: 0,
+      aspectRatio: 0.75,
     };
     Image.getSize(props.route.params.imageUrl, (width, height) => {
       this.setState({ aspectRatio: width / height });
