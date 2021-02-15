@@ -28,6 +28,7 @@ function PostSnippet(props: PostProps & { onPress?: () => void }) {
     },
     nickname: {
       fontSize: 10,
+      marginBottom: 2,
       color: colors.placeholder,
     },
     title: {
@@ -45,7 +46,7 @@ function PostSnippet(props: PostProps & { onPress?: () => void }) {
       <View style={styles.mainView}>
         <View style={styles.postDetailsView}>
           <Text style={styles.nickname} numberOfLines={1} ellipsizeMode="tail">
-            Posted by {props.nickname}
+            Posted by - {props.nickname}
           </Text>
           <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
             {props.title}

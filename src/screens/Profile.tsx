@@ -111,7 +111,6 @@ class Profile extends React.Component<any, state> {
         alignItems: "center",
         justifyContent: "space-between",
         marginTop: 8,
-        flexWrap: "wrap",
       },
     });
     return (
@@ -121,6 +120,16 @@ class Profile extends React.Component<any, state> {
           left={
             this.props.route.params.bottomNavigator ? undefined : (
               <IconButton icon="close" color={activeColor} onPress={goBack} />
+            )
+          }
+          right={
+            this.props.route.params.bottomNavigator && (
+              <IconButton
+                icon="cog"
+                color={colors.accent}
+                onPress={openSettingsWindow}
+                size={21}
+              />
             )
           }
         />
@@ -142,17 +151,6 @@ class Profile extends React.Component<any, state> {
                       ellipsizeMode="tail">
                       {this.state.userDetails?.nickname}
                     </Text>
-
-                    {this.props.route.params.bottomNavigator && (
-                      <Button
-                        mode="bordered"
-                        icon="cog"
-                        color={colors.accent}
-                        onPress={openSettingsWindow}
-                        text="Settings"
-                        fontSize={9}
-                      />
-                    )}
                   </View>
                   <View style={styles.profileDetails}>
                     <ProfileDetailView

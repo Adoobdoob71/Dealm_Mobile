@@ -20,6 +20,7 @@ import * as firebase from "firebase";
 import { IconButton, Menu, withTheme } from "react-native-paper";
 import { RoomProps } from "../components/Classes";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Linking from "expo-linking";
 
 interface state {
   posts: firebase.default.firestore.QueryDocumentSnapshot<PostProps>[];
@@ -56,7 +57,30 @@ class Home extends React.Component<any, state> {
       if (this.state.posts.length != 0)
         this.flatList?.scrollToIndex({ index: 0, animated: true });
     });
+    Linking.addEventListener("url", async (result) =>
+      this.openPost(result.url)
+    );
+    Linking.getInitialURL().then((result) => this.openPost(result));
   }
+
+  openPost = async (url: string | null) => {
+    if (url) {
+      let { path, queryParams } = Linking.parse(url);
+      switch (path) {
+        case "post":
+          if (queryParams) {
+            let data = await firebase.default
+              .firestore()
+              .collection("posts")
+              .doc(queryParams.id)
+              .get();
+            let postData = data.data() as PostProps;
+            this.props.navigation.navigate("PostScreen", { ...postData });
+          }
+          break;
+      }
+    }
+  };
 
   loadPosts = async () => {
     let user = firebase.default.auth().currentUser;
