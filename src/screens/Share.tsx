@@ -20,6 +20,8 @@ import { Header } from "../components/Header";
 import { PreferencesContext } from "../../Theming";
 import { Contact } from "../components/Contact";
 import { Alert } from "../components/Alert";
+import * as Linking from "expo-linking";
+import Clipboard from "expo-clipboard";
 
 interface state {
   contacts: ContactProps[];
@@ -135,6 +137,14 @@ class Share extends React.Component<any, state> {
     this.setState({ selectedContacts: selectedContactsTemp });
   };
 
+  copyPostLink = () => {
+    let url = Linking.makeUrl("dealm/posts", {
+      id: this.props.route.params.postID,
+    });
+    Clipboard.setString(url);
+    this.setState({ alertMessage: "Link copied!" });
+  };
+
   render() {
     const colors = this.props.theme.colors;
     const { isThemeDark } = this.context;
@@ -147,7 +157,6 @@ class Share extends React.Component<any, state> {
       this.setState({ textMessage: value });
     const screenHeight = Dimensions.get("window").height;
     const dismissAlert = () => this.setState({ alertMessage: null });
-
     const styles = StyleSheet.create({
       messageBoxView: {
         padding: 12,
@@ -190,15 +199,23 @@ class Share extends React.Component<any, state> {
             />
           }
           right={
-            <IconButton
-              icon="check"
-              size={18}
-              color={activeColor}
-              onPress={openModal}
-              disabled={
-                this.state.sending || this.state.selectedContacts.length === 0
-              }
-            />
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <IconButton
+                icon="clipboard"
+                size={18}
+                color={activeColor}
+                onPress={this.copyPostLink}
+              />
+              <IconButton
+                icon="check"
+                size={18}
+                color={activeColor}
+                onPress={openModal}
+                disabled={
+                  this.state.sending || this.state.selectedContacts.length === 0
+                }
+              />
+            </View>
           }
         />
         <FlatList
