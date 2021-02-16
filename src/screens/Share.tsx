@@ -138,7 +138,7 @@ class Share extends React.Component<any, state> {
   };
 
   copyPostLink = () => {
-    let url = Linking.makeUrl("posts", {
+    let url = Linking.makeUrl("post", {
       id: this.props.route.params.postID,
     });
     Clipboard.setString(url);
