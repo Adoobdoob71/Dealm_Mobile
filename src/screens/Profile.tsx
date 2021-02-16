@@ -126,7 +126,7 @@ class Profile extends React.Component<any, state> {
             this.props.route.params.bottomNavigator && (
               <IconButton
                 icon="cog"
-                color={colors.accent}
+                color={activeColor}
                 onPress={openSettingsWindow}
                 size={21}
               />
