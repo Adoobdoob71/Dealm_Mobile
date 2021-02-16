@@ -138,7 +138,7 @@ class Share extends React.Component<any, state> {
   };
 
   copyPostLink = () => {
-    let url = Linking.makeUrl("dealm/posts", {
+    let url = Linking.makeUrl("posts", {
       id: this.props.route.params.postID,
     });
     Clipboard.setString(url);
@@ -190,7 +190,7 @@ class Share extends React.Component<any, state> {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Header
-          title="Share post to friends"
+          title="Share post/link"
           left={
             <IconButton
               icon="arrow-left"
@@ -201,7 +201,7 @@ class Share extends React.Component<any, state> {
           right={
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <IconButton
-                icon="clipboard"
+                icon="content-copy"
                 size={18}
                 color={activeColor}
                 onPress={this.copyPostLink}
