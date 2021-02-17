@@ -138,10 +138,9 @@ class Share extends React.Component<any, state> {
   };
 
   copyPostLink = () => {
-    let url = Linking.makeUrl("post", {
-      id: this.props.route.params.postID,
-    });
-    Clipboard.setString(url);
+    Clipboard.setString(
+      `https://dealm-redirect.web.app?id=${this.props.route.params.postID}`
+    );
     this.setState({ alertMessage: "Link copied!" });
   };
 
