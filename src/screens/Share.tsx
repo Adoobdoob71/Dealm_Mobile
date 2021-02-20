@@ -7,6 +7,7 @@ import {
   Text,
   TextInput,
   View,
+  Platform
 } from "react-native";
 import { IconButton, Modal, Portal, withTheme } from "react-native-paper";
 import * as firebase from "firebase";
@@ -199,12 +200,14 @@ class Share extends React.Component<any, state> {
           }
           right={
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <IconButton
-                icon="content-copy"
-                size={18}
-                color={activeColor}
-                onPress={this.copyPostLink}
-              />
+              {Platform.OS !== "web" && (
+                <IconButton
+                  icon="content-copy"
+                  size={18}
+                  color={activeColor}
+                  onPress={this.copyPostLink}
+                />
+              )}
               <IconButton
                 icon="check"
                 size={18}

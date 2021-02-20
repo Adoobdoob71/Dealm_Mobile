@@ -59,8 +59,6 @@ class CreateComment extends React.Component<any, state> {
     };
     await firebase.default
       .firestore()
-      .collection("users")
-      .doc(this.props.route.params.userUID)
       .collection("posts")
       .doc(this.props.route.params.postID)
       .collection("comments")
@@ -113,6 +111,7 @@ class CreateComment extends React.Component<any, state> {
           onChangeText={updateCommentText}
           style={styles.commentText}
           placeholder="Say something..."
+          multiline={true}
           placeholderTextColor={colors.placeholder}
         />
         {this.state.message && (

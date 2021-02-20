@@ -145,8 +145,6 @@ class Home extends React.Component<any, state> {
     const colors = this.props.theme.colors;
     const { isThemeDark } = this.context;
     const activeColor = isThemeDark ? colors.primary : colors.text;
-    const openCreatePostWindow = () =>
-      this.props.navigation.navigate("CreatePost");
     const openSearchPostWindow = () =>
       this.props.navigation.navigate("SearchPost");
     const styles = StyleSheet.create({
@@ -174,38 +172,24 @@ class Home extends React.Component<any, state> {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Header
-          left={
-            <IconButton
-              icon="plus"
-              onPress={openCreatePostWindow}
-              color={activeColor}
-              disabled={!firebase.default.auth().currentUser}
-              size={21}
-            />
-          }
-          center={
-            <TouchableWithoutFeedback
-              onPress={openSearchPostWindow}
-              style={{ marginHorizontal: 16 }}>
-              <View style={styles.searchButtonView}>
-                <MaterialCommunityIcons
-                  name="magnify"
-                  size={16}
-                  color={colors.placeholder}
-                />
-                <Text style={styles.searchButtonPlaceholder}>Search</Text>
-              </View>
-            </TouchableWithoutFeedback>
-          }
+          title="Dealm"
           right={
-            Platform.OS === "web" ? (
-              <IconButton
-                icon="refresh"
-                onPress={this.loadPosts}
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {Platform.OS === "web" && (
+                <IconButton
+                  icon="refresh"
+                  onPress={this.loadPosts}
+                  size={21}
+                  color={activeColor}
+                />
+              )}
+              <IconButton 
+                icon="magnify"
+                onPress={openSearchPostWindow}
                 size={21}
                 color={activeColor}
               />
-            ) : undefined
+            </View>
           }
         />
         <FlatList

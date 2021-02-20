@@ -73,6 +73,8 @@ class Profile extends React.Component<any, state> {
 
     const goBack = () => this.props.navigation.goBack();
     const openSettingsWindow = () => this.props.navigation.navigate("Settings");
+    const openCreatePostWindow = () =>
+      this.props.navigation.navigate("CreatePost");
 
     const styles = StyleSheet.create({
       header: {
@@ -124,12 +126,21 @@ class Profile extends React.Component<any, state> {
           }
           right={
             this.props.route.params.bottomNavigator && (
-              <IconButton
-                icon="cog"
-                color={activeColor}
-                onPress={openSettingsWindow}
-                size={21}
-              />
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <IconButton
+                  icon="plus"
+                  onPress={openCreatePostWindow}
+                  color={activeColor}
+                  disabled={!firebase.default.auth().currentUser}
+                  size={21}
+                />
+                <IconButton
+                  icon="cog"
+                  color={activeColor}
+                  onPress={openSettingsWindow}
+                  size={21}
+                />
+              </View>
             )
           }
         />
