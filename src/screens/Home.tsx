@@ -183,7 +183,7 @@ class Home extends React.Component<any, state> {
                   color={activeColor}
                 />
               )}
-              <IconButton 
+              <IconButton
                 icon="magnify"
                 onPress={openSearchPostWindow}
                 size={21}
